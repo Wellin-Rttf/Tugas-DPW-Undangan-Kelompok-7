@@ -11,5 +11,4 @@ jobs:
     steps:
       - name: Trigger cPanel Git Deployment
         run: |
-          curl -H "Authorization: cpanel ${{ secrets.CPANEL_USER }}:${{ secrets.CPANEL_TOKEN }}" \
-          "${{ secrets.CPANEL_URL }}/execute/VersionControl/deploy?repository_root=/home/${{ secrets.CPANEL_USER }}/public_html/project"
+          curl -g -s -S -H "Authorization: cpanel ${{ secrets.CPANEL_USER }}:${{ secrets.CPANEL_TOKEN }}" "${{ secrets.CPANEL_URL }}/execute/VersionControl/deploy?repository_root=/home/${{ secrets.CPANEL_USER }}/public_html/project"
