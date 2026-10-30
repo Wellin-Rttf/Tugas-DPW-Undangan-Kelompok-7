@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Welling & Sheila</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    
+    <script src="assets/scripts/dashboard.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+<body>
+
+    <div class="dashboard-wrapper">
+        <div class="dashboard-container">
+            
+            <!-- Section Login -->
+            <div id="loginSection" class="page-section">
+                <div class="login-card">
+                    <h2>DASHBOARD ADMIN<br>UNDANGAN PERNIKAHAN</h2>
+
+                    <form id="loginForm">
+                        <div class="input-field">
+                            <input id="username" type="text" required>
+                            <label for="username">Username</label>
+                        </div>
+
+                        <div class="input-field">
+                            <input id="password" type="password" required>
+                            <label for="password">Password</label>
+                        </div>
+
+                        <button type="submit" class="btn waves-effect waves-light btn-login">
+                            LOGIN
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Section Dashboard Utama -->
+            <div id="dashboardSection" class="hidden">
+                <div class="dashboard-header">
+                    <h1 class="header-title">PANEL PENGELOLA UNDANGAN</h1>
+                    <div id="welcomeMessage" class="welcome-text"></div>
+                </div>
+
+                <div class="hero-section">
+                    <img src="gambar/cincin.avif" alt="Foto Cincin">
+                </div>
+
+                <div class="menu-container">
+                    <div class="menu-grid">
+                        <a href="#!" onclick="showSection('mempelaiSection')" class="menu-card waves-effect">
+                            <i class="material-icons">favorite</i>
+                            <span class="menu-text">DATA MEMPELAI</span>
+                        </a>
+                        <a href="#!" onclick="showSection('galeriSection')" class="menu-card waves-effect">
+                            <i class="material-icons">photo_library</i>
+                            <span class="menu-text">GALERI FOTO</span>
+                        </a>
+                        <a href="#!" onclick="showSection('jadwalSection')" class="menu-card waves-effect">
+                            <i class="material-icons">event</i>
+                            <span class="menu-text">JADWAL &amp; LOKASI</span>
+                        </a>
+                        <a href="#!" onclick="showSection('ucapanSection')" class="menu-card waves-effect">
+                            <i class="material-icons">chat</i>
+                            <span class="menu-text">UCAPAN &amp; RSVP</span>
+                        </a>
+                    </div>
+
+                    <button id="btnLogout" class="btn btn-logout waves-effect waves-dark">Keluar (Logout)</button>
+                </div>
+            </div>
+
+            <!-- Edit Mempelai -->
+            <div id="mempelaiSection" class="page-section hidden">
+                <h1 class="header-title">EDIT DATA MEMPELAI</h1>
+
+                <div class="form-content">
+                    <label class="input-group-label">Nama Mempelai Pria &amp; Wanita</label>
+                    <input type="text" class="custom-input" placeholder="Nama Mempelai Pria">
+                    <input type="text" class="custom-input" placeholder="Nama Mempelai Wanita">
+
+                    <label class="input-group-label">Orang Tua Mempelai Pria</label>
+                    <input type="text" class="custom-input" placeholder="Nama Ayah Pria">
+                    <input type="text" class="custom-input" placeholder="Nama Ibu Pria">
+
+                    <label class="input-group-label">Orang Tua Mempelai Wanita</label>
+                    <input type="text" class="custom-input" placeholder="Nama Ayah Wanita">
+                    <input type="text" class="custom-input" placeholder="Nama Ibu Wanita">
+
+                    <button onclick="saveAndReturn()" class="btn btn-bottom-action waves-effect">Simpan Perubahan</button>
+                </div>
+            </div>
+
+            <!-- Edit Galeri -->
+            <div id="galeriSection" class="page-section hidden">
+                <h1 class="header-title">EDIT GALERI FOTO</h1>
+
+                <div class="form-content">
+                    <label class="input-group-label">Unggah Foto Baru</label>
+                    <div class="file-upload-box">
+                        <span class="file-label">Pilih foto galeri 1...</span>
+                        <input type="file" onchange="updateFileName(this)">
+                    </div>
+                    <div class="file-upload-box">
+                        <span class="file-label">Pilih foto galeri 2...</span>
+                        <input type="file" onchange="updateFileName(this)">
+                    </div>
+
+                    <button onclick="saveAndReturn()" class="btn btn-bottom-action waves-effect">Simpan Perubahan</button>
+                </div>
+            </div>
+
+            <!-- Edit Jadwal -->
+            <div id="jadwalSection" class="page-section hidden">
+                <h1 class="header-title">EDIT JADWAL &amp; LOKASI</h1>
+
+                <div class="form-content">
+                    <label class="input-group-label">Waktu Acara</label>
+                    <input type="text" class="custom-input" placeholder="Tanggal & Jam Akad Nikah">
+                    <input type="text" class="custom-input" placeholder="Tanggal & Jam Resepsi">
+
+                    <label class="input-group-label">Link Lokasi Google Maps</label>
+                    <input type="text" class="custom-input" placeholder="Link Google Maps Akad">
+                    <input type="text" class="custom-input" placeholder="Link Google Maps Resepsi">
+
+                    <button onclick="saveAndReturn()" class="btn btn-bottom-action waves-effect">Simpan Perubahan</button>
+                </div>
+            </div>
+
+            <!-- Lihat Ucapan -->
+            <div id="ucapanSection" class="page-section hidden">
+                <h1 class="header-title">DAFTAR UCAPAN &amp; RSVP</h1>
+
+                <div class="form-content">
+                    <div class="ucapan-card">
+                        <div class="ucapan-sender">Budi &amp; Keluarga <span class="badge-rsvp">Hadir (2 Orang)</span></div>
+                        <p class="ucapan-text">Selamat atas pernikahan Welling & Sheila! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah.</p>
+                    </div>
+
+                    <button onclick="showSection('dashboardSection')" class="btn btn-bottom-action waves-effect">Kembali ke Menu</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

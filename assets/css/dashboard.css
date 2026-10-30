@@ -1,0 +1,221 @@
+:root {
+    --c-mustard: #E9C46A;
+    --c-granite: #4E6151;
+    --c-beige: #E9EDC9;
+    --c-tea: #C5D8A4;
+    --c-dark: #1C1C1E;
+    --font-bold: 'Plus Jakarta Sans', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0; padding: 0;
+}
+
+body {
+    font-family: var(--font-bold);
+    background-color: var(--c-dark);
+    color: var(--c-dark);
+    min-height: 100vh;
+}
+
+.hidden { display: none !important; }
+
+.dashboard-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.dashboard-container {
+    width: 100%;
+    max-width: 620px;
+    background-color: var(--c-beige);
+    border-radius: 28px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    padding: 30px;
+}
+
+.header-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    text-align: center;
+    color: var(--c-granite);
+    margin-bottom: 15px;
+}
+
+.login-card {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 35px 25px;
+    border: 2px solid var(--c-tea);
+    text-align: center;
+}
+
+.login-card h2 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--c-granite);
+    margin-bottom: 25px;
+}
+
+.btn-login {
+    background-color: var(--c-granite) !important;
+    color: #ffffff !important;
+    width: 100%;
+    border-radius: 50px !important;
+    height: 45px !important;
+    line-height: 45px !important;
+    font-weight: 800;
+}
+
+.welcome-text {
+    text-align: center;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.hero-section {
+    width: 100%;
+    height: 180px;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    border: 3px solid var(--c-tea);
+}
+
+.hero-section img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.menu-card {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 20px;
+    border: 2px solid var(--c-tea);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+
+.menu-card:hover { transform: translateY(-4px); }
+
+.menu-card i {
+    font-size: 2.2rem;
+    color: var(--c-granite);
+    margin-bottom: 8px;
+}
+
+.menu-text {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--c-dark);
+}
+
+.btn-logout {
+    background-color: var(--c-dark) !important;
+    color: var(--c-mustard) !important;
+    width: 100%;
+    border-radius: 50px !important;
+    height: 45px !important;
+    margin-top: 25px;
+    font-weight: 800;
+}
+
+.form-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.input-group-label {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--c-granite);
+    margin-top: 10px;
+}
+
+.custom-input {
+    width: 100% !important;
+    background-color: #ffffff !important;
+    border: 2px solid var(--c-tea) !important;
+    border-radius: 12px !important;
+    padding: 0 15px !important;
+    height: 42px !important;
+    box-sizing: border-box !important;
+    font-size: 0.85rem !important;
+}
+
+.file-upload-box {
+    position: relative;
+    background-color: #ffffff;
+    border: 2px dashed var(--c-granite);
+    border-radius: 12px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    cursor: pointer;
+}
+
+.file-upload-box input[type="file"] {
+    position: absolute;
+    top: 0; left: 0; opacity: 0;
+    width: 100%; height: 100%;
+    cursor: pointer;
+}
+
+.btn-bottom-action {
+    background-color: var(--c-granite) !important;
+    color: #ffffff !important;
+    width: 100%;
+    border-radius: 50px !important;
+    height: 45px !important;
+    line-height: 45px !important;
+    margin-top: 20px;
+    font-weight: 800;
+}
+
+.ucapan-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 15px;
+    border: 2px solid var(--c-tea);
+    margin-bottom: 10px;
+}
+
+.ucapan-sender {
+    font-weight: 800;
+    font-size: 0.85rem;
+    color: var(--c-granite);
+}
+
+.badge-rsvp {
+    font-size: 0.7rem;
+    background: var(--c-mustard);
+    color: var(--c-dark);
+    padding: 0.2rem 0.5rem;
+    border-radius: 50px;
+    margin-left: 5px;
+}
+
+.ucapan-text {
+    font-size: 0.82rem;
+    color: #555;
+    margin-top: 5px;
+}

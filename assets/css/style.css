@@ -1,0 +1,965 @@
+/* Vintage Earthy Tone Palette Custom Variables */
+:root {
+  --c-mustard: #E9C46A; /* Tuscan Sun (Warm Gold) */
+  --c-granite: #4E6151; /* Granite (Deep Sage Green) */
+  --c-beige: #E9EDC9;   /* Beige Light */
+  --c-tea: #C5D8A4;     /* Tea Green */
+  --c-dark: #1C1C1E;    /* Carbon Black */
+  --c-white: #FFFFFF;
+  
+  --font-bold: 'Plus Jakarta Sans', sans-serif;
+  --font-script: 'Great Vibes', cursive;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body, h1, h2, h3, p, blockquote, cite {
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-bold);
+  color: var(--c-dark);
+  background-color: var(--c-dark);
+  line-height: 1.6;
+}
+
+body.kunci-scroll {
+  overflow: hidden;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+button, input, textarea, select {
+  font-family: var(--font-bold);
+  color: inherit;
+}
+
+.wadah-utama {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background-color: var(--c-beige);
+  box-shadow: 0px 20px 50px rgba(0, 0, 0, 0.4);
+  overflow-x: hidden;
+}
+
+/* Floating Music Toggle Button */
+.tombol-musik {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  z-index: 999;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--c-mustard);
+  color: var(--c-dark);
+  border: 2px solid var(--c-granite);
+  font-size: 1.4rem;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.tombol-musik:hover {
+  transform: scale(1.1);
+}
+
+.tombol-musik .putar {
+  animation: spin 3s linear infinite;
+}
+
+.tombol-musik.paused .putar {
+  animation-play-state: paused;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+/* Cover / Sampul */
+.sampul {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  padding: 3.5rem 2rem;
+  text-align: center;
+  color: var(--c-white);
+  background: url("../../gambar/1.jpeg") center / cover no-repeat;
+  transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.sampul-bg-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(180deg, rgba(28,28,30,0.4) 0%, rgba(78,97,81,0.7) 100%);
+  z-index: 1;
+}
+
+.sampul-atas, .sampul-bawah {
+  position: relative;
+  z-index: 2;
+}
+
+.badge-wedding {
+  display: inline-block;
+  background-color: var(--c-mustard);
+  color: var(--c-dark);
+  padding: 0.4rem 1.4rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.nama-sampul {
+  font-family: var(--font-bold);
+  font-size: 3.8rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-top: 1rem;
+  color: var(--c-beige);
+  text-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+.nama-sampul .ampersand {
+  font-family: var(--font-script);
+  color: var(--c-mustard);
+  font-weight: 400;
+  font-size: 4.5rem;
+}
+
+.kartu-tamu-sampul {
+  background: rgba(28, 28, 30, 0.65);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(233, 196, 106, 0.3);
+  padding: 2rem 1.5rem;
+  border-radius: 24px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.kepada-label {
+  font-size: 0.85rem;
+  color: var(--c-tea);
+}
+
+.tamu-sampul {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--c-mustard);
+  margin: 0.4rem 0;
+  letter-spacing: 0.05em;
+}
+
+.catatan-sampul {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 1.5rem;
+}
+
+/* Tombol Out of the box */
+.tombol {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.85rem 2rem;
+  border-radius: 50px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: none;
+}
+
+.tombol-buka-mewah {
+  background: var(--c-mustard);
+  color: var(--c-dark);
+  box-shadow: 0 8px 25px rgba(233, 196, 106, 0.4);
+}
+
+.tombol-buka-mewah:hover {
+  transform: translateY(-3px) scale(1.03);
+  background: #f0cf78;
+}
+
+.tombol-outline {
+  background: transparent;
+  border: 2px solid var(--c-granite);
+  color: var(--c-granite);
+}
+
+.tombol-outline:hover {
+  background: var(--c-granite);
+  color: var(--c-white);
+  transform: translateY(-2px);
+}
+
+.tombol-std {
+  background: var(--c-granite);
+  color: var(--c-white);
+  box-shadow: 0 6px 20px rgba(78, 97, 81, 0.3);
+}
+
+.tombol-std:hover {
+  background: #3c4b3e;
+  transform: translateY(-2px);
+}
+
+.tombol-isi-mewah {
+  background: var(--c-mustard);
+  color: var(--c-dark);
+  width: 100%;
+  padding: 1rem;
+  box-shadow: 0 8px 20px rgba(233, 196, 106, 0.3);
+}
+
+.tombol-isi-mewah:hover {
+  background: #f0cf78;
+  transform: translateY(-2px);
+}
+
+/* Sections Base */
+.bagian {
+  padding: 4.5rem 2rem;
+  text-align: center;
+}
+
+.judul-bagian {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--c-granite);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+  position: relative;
+  display: inline-block;
+}
+
+.subjudul-bagian {
+  font-size: 0.88rem;
+  color: #555;
+  max-width: 500px;
+  margin: 0 auto 2.5rem;
+}
+
+/* Section Pembuka */
+.pembuka-card {
+  background-color: var(--c-white);
+  padding: 3rem 2rem;
+  border-radius: 32px;
+  box-shadow: 0 15px 35px rgba(78, 97, 81, 0.08);
+  border: 2px solid var(--c-tea);
+  position: relative;
+}
+
+.hiasan-bunga-top {
+  font-size: 1.8rem;
+  color: var(--c-granite);
+  margin-bottom: 0.5rem;
+}
+
+.label-tamu {
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--c-granite);
+}
+
+.salam {
+  font-size: 0.9rem;
+  margin: 1.2rem 0 2rem;
+}
+
+.nama-mempelai-hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.nama-mempelai-hero .nama {
+  font-size: 3.2rem;
+  font-weight: 800;
+  color: var(--c-granite);
+}
+
+.nama-mempelai-hero .simbol {
+  font-family: var(--font-script);
+  font-size: 3.5rem;
+  color: var(--c-mustard);
+}
+
+.badge-tanggal {
+  display: inline-block;
+  background-color: var(--c-tea);
+  color: var(--c-dark);
+  font-weight: 800;
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+}
+
+.foto-mempelai-wrapper {
+  max-width: 520px;
+  margin: 0 auto 2rem;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 4px solid var(--c-mustard);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+}
+
+.foto-mempelai {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+}
+
+.kutipan-ayat {
+  background-color: var(--c-beige);
+  padding: 1.5rem;
+  border-radius: 20px;
+}
+
+.ayat {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #444;
+}
+
+.sumber-ayat {
+  display: block;
+  margin-top: 0.6rem;
+  font-weight: 800;
+  color: var(--c-granite);
+}
+
+/* Countdown Section */
+.bagian-countdown {
+  background-color: var(--c-granite);
+  color: var(--c-white);
+  border-radius: 32px;
+  margin: 0 2rem;
+  padding: 3rem 1.5rem;
+}
+
+.bagian-countdown .judul-bagian {
+  color: var(--c-mustard);
+}
+
+.bagian-countdown .subjudul-bagian {
+  color: var(--c-tea);
+}
+
+.countdown-grid {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.countdown-item {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(233, 196, 106, 0.3);
+  padding: 1rem;
+  border-radius: 18px;
+  min-width: 80px;
+  backdrop-filter: blur(5px);
+}
+
+.countdown-item span {
+  display: block;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--c-mustard);
+  line-height: 1;
+}
+
+.countdown-item small {
+  font-size: 0.75rem;
+  color: var(--c-tea);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+
+/* Bride & Groom Cards */
+.mempelai-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 650px) {
+  .mempelai-grid { grid-template-columns: 1fr 1fr; }
+}
+
+.profil-mempelai-card {
+  background: var(--c-white);
+  border-radius: 28px;
+  overflow: hidden;
+  border: 2px solid var(--c-tea);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  transition: transform 0.3s ease;
+}
+
+.profil-mempelai-card:hover {
+  transform: translateY(-6px);
+}
+
+.profil-mempelai-card .foto-box {
+  position: relative;
+  height: 300px;
+}
+
+.profil-mempelai-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.badge-peran {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  background: var(--c-mustard);
+  color: var(--c-dark);
+  font-weight: 800;
+  font-size: 0.75rem;
+  padding: 0.3rem 1rem;
+  border-radius: 50px;
+}
+
+.info-mempelai {
+  padding: 1.8rem 1.5rem;
+}
+
+.info-mempelai h3 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--c-granite);
+}
+
+.anak-dari {
+  font-size: 0.85rem;
+  margin: 0.8rem 0 1.2rem;
+}
+
+.ig-mempelai {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--c-granite);
+  text-decoration: none;
+}
+
+/* Event Cards */
+.acara-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+@media (min-width: 650px) {
+  .acara-grid { grid-template-columns: 1fr 1fr; }
+}
+
+.acara-card {
+  background: var(--c-white);
+  border-radius: 28px;
+  padding: 2.5rem 1.8rem;
+  border: 2px solid var(--c-tea);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.acara-card.highlight {
+  background: #fbf7f0;
+  border-color: var(--c-mustard);
+}
+
+.icon-acara {
+  font-size: 2.2rem;
+  color: var(--c-granite);
+  margin-bottom: 0.8rem;
+}
+
+.judul-acara {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--c-granite);
+  margin-bottom: 1rem;
+}
+
+.detail-acara-item {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--c-dark);
+  margin-bottom: 0.3rem;
+}
+
+.tempat-acara {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--c-granite);
+  margin-top: 1rem;
+}
+
+.alamat-acara {
+  font-size: 0.82rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.foto-acara {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 24px;
+  margin-bottom: 1.8rem;
+  border: 3px solid var(--c-tea);
+}
+
+/* Galeri Asymmetrical Grid */
+.petunjuk-galeri {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--c-granite);
+  margin-bottom: 1.2rem;
+}
+
+.galeri-foto-modern {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+@media (min-width: 600px) {
+  .galeri-foto-modern { grid-template-columns: repeat(3, 1fr); }
+}
+
+.galeri-item {
+  position: relative;
+  height: 200px;
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid var(--c-tea);
+}
+
+.galeri-item.item-besar {
+  grid-column: span 2;
+  height: 260px;
+}
+
+.galeri-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.overlay-zoom {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(78, 97, 81, 0.5);
+  color: var(--c-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.galeri-item:hover img { transform: scale(1.08); }
+.galeri-item:hover .overlay-zoom { opacity: 1; }
+
+/* Timeline */
+.timeline {
+  position: relative;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; left: 50%;
+  width: 3px;
+  background: var(--c-granite);
+  transform: translateX(-50%);
+}
+
+.timeline-item {
+  position: relative;
+  width: 50%;
+  padding: 0 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.timeline-item.left { left: 0; text-align: right; }
+.timeline-item.right { left: 50%; text-align: left; }
+
+.timeline-dot {
+  position: absolute;
+  top: 15px;
+  width: 36px; height: 36px;
+  background: var(--c-mustard);
+  color: var(--c-dark);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.timeline-item.left .timeline-dot { right: -18px; }
+.timeline-item.right .timeline-dot { left: -18px; }
+
+.timeline-content {
+  background: var(--c-white);
+  padding: 1.5rem;
+  border-radius: 20px;
+  border: 2px solid var(--c-tea);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+}
+
+.timeline-year {
+  font-weight: 800;
+  color: var(--c-granite);
+  font-size: 1.2rem;
+}
+
+.timeline-content h3 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-bottom: 0.4rem;
+}
+
+.timeline-content p {
+  font-size: 0.82rem;
+  color: #555;
+}
+
+@media (max-width: 600px) {
+  .timeline::before { left: 20px; }
+  .timeline-item { width: 100%; padding-left: 50px; padding-right: 0; }
+  .timeline-item.left, .timeline-item.right { left: 0; text-align: left; }
+  .timeline-item.left .timeline-dot, .timeline-item.right .timeline-dot { left: 2px; }
+}
+
+/* Digital Gift / Amplop Cards */
+.amplop-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+@media (min-width: 600px) {
+  .amplop-grid { grid-template-columns: 1fr 1fr; }
+}
+
+.amplop-card {
+  background: var(--c-white);
+  border-radius: 24px;
+  padding: 1.8rem;
+  border: 2px solid var(--c-tea);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+}
+
+.logo-bank {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--c-granite);
+  margin-bottom: 0.8rem;
+}
+
+.no-rek {
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--c-dark);
+}
+
+.pemilik-rek {
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 1.2rem;
+}
+
+.tombol-salin {
+  background: var(--c-tea);
+  color: var(--c-dark);
+  border: none;
+  font-weight: 800;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.tombol-salin:hover {
+  background: var(--c-mustard);
+}
+
+/* RSVP Form */
+.formulir-ucapan {
+  background: var(--c-white);
+  padding: 2.2rem;
+  border-radius: 28px;
+  border: 2px solid var(--c-tea);
+  text-align: left;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.baris-input {
+  margin-bottom: 1.2rem;
+}
+
+.baris-input label {
+  display: block;
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--c-granite);
+  margin-bottom: 0.4rem;
+}
+
+.baris-input input[type="text"], .baris-input textarea, .custom-select {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 2px solid #e0d8cf;
+  border-radius: 14px;
+  background: #fbf9f5;
+  outline: none;
+  font-size: 0.88rem;
+}
+
+.baris-input input:focus, .baris-input textarea:focus {
+  border-color: var(--c-granite);
+}
+
+.opsi-rsvp {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.radio-card {
+  flex: 1;
+  min-width: 100px;
+  cursor: pointer;
+}
+
+.radio-card input { display: none; }
+
+.radio-card span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.6rem;
+  background: #fbf9f5;
+  border: 2px solid #e0d8cf;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.radio-card input:checked + span {
+  background: var(--c-tea);
+  border-color: var(--c-granite);
+  color: var(--c-granite);
+}
+
+.daftar-ucapan-wrapper {
+  background: var(--c-white);
+  padding: 2rem;
+  border-radius: 28px;
+  border: 2px solid var(--c-tea);
+  text-align: left;
+}
+
+.daftar-ucapan-wrapper h3 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--c-granite);
+  margin-bottom: 1.2rem;
+}
+
+.daftar-ucapan {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+.kartu-ucapan {
+  background: var(--c-beige);
+  padding: 1.2rem;
+  border-radius: 18px;
+}
+
+.baris-nama {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.baris-nama strong {
+  font-size: 0.9rem;
+  color: var(--c-granite);
+  font-weight: 800;
+}
+
+.badge-rsvp-item {
+  font-size: 0.7rem;
+  font-weight: 800;
+  background: var(--c-tea);
+  color: var(--c-dark);
+  padding: 0.2rem 0.6rem;
+  border-radius: 50px;
+}
+
+.kartu-ucapan p {
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.catatan-bawah {
+  padding: 2rem 0;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--c-granite);
+  text-align: center;
+}
+
+/* Lightbox Modal */
+.lightbox-modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(28,28,30,0.92);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.lightbox-modal.aktif {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lightbox-img {
+  max-width: 85vw;
+  max-height: 80vh;
+  border-radius: 16px;
+  object-fit: contain;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+}
+
+.lightbox-close, .lightbox-prev, .lightbox-next {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border: none;
+  font-size: 1.5rem;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-close { top: 20px; right: 20px; }
+.lightbox-prev { left: 20px; }
+.lightbox-next { right: 20px; }
+
+/* Toast Box */
+.toast-box {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--c-dark);
+  color: var(--c-mustard);
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 0.8rem 1.6rem;
+  border-radius: 50px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  z-index: 10000;
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.toast-box.tampil {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* Animations */
+.animasi-muncul {
+  opacity: 0;
+  transform: translateY(35px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.animasi-muncul.tampil {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pulse {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
