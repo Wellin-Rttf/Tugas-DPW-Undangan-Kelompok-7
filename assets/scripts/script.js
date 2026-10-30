@@ -11,11 +11,20 @@ const tombolMusik = document.getElementById('tombol-musik');
 const toastBox = document.getElementById('toast-box');
 const tombolSaveDate = document.getElementById('tombol-save-date');
 
-// Data awal ucapan dinamis dari LocalStorage (Kosong secara default jika belum ada input)
+// ---------- Ucapan (LocalStorage) ----------
 let dataUcapan = [];
 
-if (localStorage.getItem('ucapanPernikahan')) {
-  dataUcapan = JSON.parse(localStorage.getItem('ucapanPernikahan'));
+try {
+  dataUcapan = JSON.parse(localStorage.getItem('ucapanPernikahan')) || [];
+} catch (e) {
+  dataUcapan = [];
+}
+
+// Cegah HTML/script dari input tamu ikut dieksekusi
+function bersihkanTeks(teks) {
+  const el = document.createElement('div');
+  el.textContent = teks;
+  return el.innerHTML;
 }
 
 function tampilkanUcapan() {
@@ -24,33 +33,50 @@ function tampilkanUcapan() {
     return;
   }
 
-  let htmlUcapan = '';
-  dataUcapan.forEach(function(item) {
-    htmlUcapan += `
+  daftarUcapan.innerHTML = dataUcapan.map(function (item) {
+    return `
       <div class="kartu-ucapan">
         <div class="baris-nama">
-          <strong>${item.nama}</strong>
-          <span class="badge-rsvp-item">${item.rsvp} (${item.jumlah})</span>
+          <strong>${bersihkanTeks(item.nama)}</strong>
+          <span class="badge-rsvp-item">${bersihkanTeks(item.rsvp)} (${bersihkanTeks(item.jumlah)})</span>
         </div>
-        <p>${item.pesan}</p>
-        <small style="font-size: 0.7rem; color: #777; display:block; margin-top:0.4rem;">${item.tanggal}</small>
+        <p>${bersihkanTeks(item.pesan)}</p>
+        <small style="font-size: 0.7rem; color: #777; display:block; margin-top:0.4rem;">${bersihkanTeks(item.tanggal)}</small>
       </div>
     `;
-  });
-
-  daftarUcapan.innerHTML = htmlUcapan;
+  }).join('');
 }
 
-// Buka Undangan & Autoplay Musik
-tombolBuka.addEventListener('click', function() {
-  sampul.style.transform = 'translateY(-100%)';
+// ---------- Musik latar ----------
+// File musik ditaruh di assets/music/musik-latar.mp3.
+// Kalau file belum ada, tombol musik otomatis disembunyikan.
+let musikTersedia = true;
 
-  if (musikLatar) {
-    musikLatar.play().catch(e => console.log('Autoplay ditahan browser:', e));
-    tombolMusik.classList.remove('hidden');
+if (musikLatar) {
+  const sumberMusik = musikLatar.querySelector('source');
+  if (sumberMusik) {
+    sumberMusik.addEventListener('error', function () {
+      musikTersedia = false;
+      tombolMusik.classList.add('hidden');
+    });
   }
+}
 
-  setTimeout(function() {
+function putarMusik() {
+  if (!musikLatar || !musikTersedia) return;
+
+  tombolMusik.classList.remove('hidden');
+  musikLatar.play()
+    .then(() => tombolMusik.classList.remove('paused'))
+    .catch(() => tombolMusik.classList.add('paused'));
+}
+
+// Buka Undangan
+tombolBuka.addEventListener('click', function () {
+  sampul.style.transform = 'translateY(-100%)';
+  putarMusik();
+
+  setTimeout(function () {
     sampul.style.display = 'none';
     konten.style.display = 'block';
     document.body.classList.remove('kunci-scroll');
@@ -60,45 +86,40 @@ tombolBuka.addEventListener('click', function() {
   }, 700);
 });
 
-// Play/Pause Musik Latar
-tombolMusik.addEventListener('click', function() {
+// Play/Pause
+tombolMusik.addEventListener('click', function () {
   if (musikLatar.paused) {
-    musikLatar.play();
-    tombolMusik.classList.remove('paused');
+    musikLatar.play().then(() => tombolMusik.classList.remove('paused')).catch(() => {});
   } else {
     musikLatar.pause();
     tombolMusik.classList.add('paused');
   }
 });
 
-// Toast Notifikasi
+// ---------- Toast ----------
 function tampilkanToast(pesan) {
   toastBox.textContent = pesan;
   toastBox.classList.add('tampil');
-  setTimeout(() => {
-    toastBox.classList.remove('tampil');
-  }, 3000);
+  setTimeout(() => toastBox.classList.remove('tampil'), 3000);
 }
 
-// Salin Teks Rekening
+// ---------- Salin rekening ----------
 function salinTeks(elementId, pesanSukses) {
   const teks = document.getElementById(elementId).innerText;
-  navigator.clipboard.writeText(teks).then(() => {
-    tampilkanToast(pesanSukses);
-  });
+  navigator.clipboard.writeText(teks)
+    .then(() => tampilkanToast(pesanSukses))
+    .catch(() => tampilkanToast('Gagal menyalin, silakan salin manual.'));
 }
 
-// Fitur Save The Date (Google Calendar + Download .ics)
-tombolSaveDate.addEventListener('click', function() {
-  // Google Calendar URL
+// ---------- Save The Date ----------
+tombolSaveDate.addEventListener('click', function () {
   const gCalUrl = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Pernikahan+Welling+%26+Sheila&dates=20271212T080000/20271212T160000&details=Acara+Pernikahan+Welling+%26+Sheila.&location=Hotel+Pangeran+Pekanbaru";
   window.open(gCalUrl, '_blank');
-
   tampilkanToast('Membuka Kalender Google...');
 });
 
-// Form Submit RSVP & Ucapan
-formulirUcapan.addEventListener('submit', function(e) {
+// ---------- Form RSVP ----------
+formulirUcapan.addEventListener('submit', function (e) {
   e.preventDefault();
 
   const nama = inputNama.value.trim();
@@ -111,63 +132,49 @@ formulirUcapan.addEventListener('submit', function(e) {
       day: 'numeric', month: 'short', year: 'numeric'
     });
 
-    dataUcapan.unshift({
-      nama: nama,
-      pesan: pesan,
-      rsvp: rsvp,
-      jumlah: jumlah,
-      tanggal: tanggalHariIni
-    });
-
+    dataUcapan.unshift({ nama, pesan, rsvp, jumlah, tanggal: tanggalHariIni });
     localStorage.setItem('ucapanPernikahan', JSON.stringify(dataUcapan));
 
     tampilkanUcapan();
     formulirUcapan.reset();
-
     tampilkanToast('Konfirmasi & ucapan Anda berhasil dikirim!');
   }
 });
 
-// Countdown Timer Logic
+// ---------- Countdown ----------
 function jalankanCountdown() {
   const tglAcara = new Date('December 12, 2027 08:00:00').getTime();
+  const dua = (n) => (n < 10 ? '0' + n : n);
 
-  setInterval(function() {
-    const sekarang = new Date().getTime();
-    const selisih = tglAcara - sekarang;
+  function hitung() {
+    const selisih = tglAcara - Date.now();
+    if (selisih <= 0) return;
 
-    if (selisih > 0) {
-      const hari = Math.floor(selisih / (1000 * 60 * 60 * 24));
-      const jam = Math.floor((selisih % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const menit = Math.floor((selisih % (1000 * 60 * 60)) / (1000 * 60));
-      const detik = Math.floor((selisih % (1000 * 60)) / 1000);
+    document.getElementById('cd-hari').textContent = dua(Math.floor(selisih / 86400000));
+    document.getElementById('cd-jam').textContent = dua(Math.floor((selisih % 86400000) / 3600000));
+    document.getElementById('cd-menit').textContent = dua(Math.floor((selisih % 3600000) / 60000));
+    document.getElementById('cd-detik').textContent = dua(Math.floor((selisih % 60000) / 1000));
+  }
 
-      document.getElementById('cd-hari').textContent = hari < 10 ? '0' + hari : hari;
-      document.getElementById('cd-jam').textContent = jam < 10 ? '0' + jam : jam;
-      document.getElementById('cd-menit').textContent = menit < 10 ? '0' + menit : menit;
-      document.getElementById('cd-detik').textContent = detik < 10 ? '0' + detik : detik;
-    }
-  }, 1000);
+  hitung(); // tampil langsung, tidak menunggu 1 detik
+  setInterval(hitung, 1000);
 }
 
-// Scroll Reveal Observer
+// ---------- Scroll reveal ----------
 function jalankanAnimasiMuncul() {
-  const elemenAnimasi = document.querySelectorAll('.animasi-muncul');
-
-  const observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
+  const observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
       if (entry.isIntersecting) {
         entry.target.classList.add('tampil');
+        observer.unobserve(entry.target);
       }
     });
   }, { threshold: 0.1 });
 
-  elemenAnimasi.forEach(function(el) {
-    observer.observe(el);
-  });
+  document.querySelectorAll('.animasi-muncul').forEach((el) => observer.observe(el));
 }
 
-// Lightbox Gallery Slider
+// ---------- Lightbox galeri ----------
 const lightboxModal = document.getElementById('lightbox-modal');
 const lightboxImg = document.getElementById('lightbox-img');
 const lightboxClose = document.getElementById('lightbox-close');
@@ -180,14 +187,16 @@ const imageList = [];
 
 galleryItems.forEach((img, index) => {
   imageList.push(img.src);
-  img.parentElement.addEventListener('click', () => {
-    openLightbox(index);
-  });
+  img.parentElement.addEventListener('click', () => openLightbox(index));
 });
+
+function tampilkanFoto() {
+  lightboxImg.src = imageList[currentImgIndex];
+}
 
 function openLightbox(index) {
   currentImgIndex = index;
-  lightboxImg.src = imageList[currentImgIndex];
+  tampilkanFoto();
   lightboxModal.classList.add('aktif');
 }
 
@@ -195,15 +204,44 @@ function closeLightbox() {
   lightboxModal.classList.remove('aktif');
 }
 
-lightboxClose.addEventListener('click', closeLightbox);
-lightboxNext.addEventListener('click', () => {
+function fotoBerikutnya() {
   currentImgIndex = (currentImgIndex + 1) % imageList.length;
-  lightboxImg.src = imageList[currentImgIndex];
-});
-lightboxPrev.addEventListener('click', () => {
+  tampilkanFoto();
+}
+
+function fotoSebelumnya() {
   currentImgIndex = (currentImgIndex - 1 + imageList.length) % imageList.length;
-  lightboxImg.src = imageList[currentImgIndex];
+  tampilkanFoto();
+}
+
+lightboxClose.addEventListener('click', closeLightbox);
+lightboxNext.addEventListener('click', fotoBerikutnya);
+lightboxPrev.addEventListener('click', fotoSebelumnya);
+
+// Klik area gelap untuk menutup
+lightboxModal.addEventListener('click', (e) => {
+  if (e.target === lightboxModal) closeLightbox();
 });
+
+// Keyboard (PC)
+document.addEventListener('keydown', (e) => {
+  if (!lightboxModal.classList.contains('aktif')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowRight') fotoBerikutnya();
+  if (e.key === 'ArrowLeft') fotoSebelumnya();
+});
+
+// Geser kiri/kanan (HP)
+let sentuhAwalX = 0;
+lightboxModal.addEventListener('touchstart', (e) => {
+  sentuhAwalX = e.changedTouches[0].clientX;
+}, { passive: true });
+
+lightboxModal.addEventListener('touchend', (e) => {
+  const selisih = e.changedTouches[0].clientX - sentuhAwalX;
+  if (Math.abs(selisih) < 50) return;
+  if (selisih < 0) fotoBerikutnya(); else fotoSebelumnya();
+}, { passive: true });
 
 jalankanCountdown();
 tampilkanUcapan();

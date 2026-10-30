@@ -2,7 +2,8 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#4E6151">
   <title>Undangan Pernikahan - Welling & Sheila</title>
   
   <!-- Font Google: Plus Jakarta Sans (Bold Modern) & Great Vibes -->
@@ -18,8 +19,8 @@
 <body class="kunci-scroll">
 
   <!-- Audio Backsound & Tombol Melayang -->
-  <audio id="musik-latar" loop>
-    <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=wedding-bgm-112702.mp3" type="audio/mpeg">
+  <audio id="musik-latar" loop preload="none">
+    <source src="assets/music/musik-latar.mp3" type="audio/mpeg">
   </audio>
   
   <button id="tombol-musik" class="tombol-musik hidden" aria-label="Toggle Musik">
@@ -30,6 +31,7 @@
 
     <!-- Cover Sampul -->
     <header class="sampul" id="sampul">
+      <div class="sampul-bg"></div>
       <div class="sampul-bg-overlay"></div>
       
       <div class="sampul-atas animasi-float">
@@ -115,7 +117,7 @@
         <div class="mempelai-grid">
           <article class="profil-mempelai-card">
             <div class="foto-box">
-              <img src="assets/images/10.jpeg" alt="Sheila">
+              <img loading="lazy" src="assets/images/10.jpeg" alt="Sheila">
               <span class="badge-peran">Mempelai Wanita</span>
             </div>
             <div class="info-mempelai">
@@ -129,7 +131,7 @@
 
           <article class="profil-mempelai-card">
             <div class="foto-box">
-              <img src="assets/images/11.jpeg" alt="Welling">
+              <img loading="lazy" src="assets/images/11.jpeg" alt="Welling">
               <span class="badge-peran">Mempelai Pria</span>
             </div>
             <div class="info-mempelai">
@@ -174,7 +176,7 @@
         </div>
 
         <div class="banner-acara">
-          <img class="foto-acara" src="assets/images/8.jpeg" alt="Tukar Cincin">
+          <img loading="lazy" class="foto-acara" src="assets/images/8.jpeg" alt="Tukar Cincin">
           <button class="tombol tombol-std" id="tombol-save-date">
             <i class="fa-solid fa-calendar-plus"></i> Simpan ke Kalender (Save The Date)
           </button>
@@ -188,23 +190,23 @@
         
         <div class="galeri-foto-modern" id="galeri-foto">
           <div class="galeri-item item-besar">
-            <img src="assets/images/3.jpeg" alt="Galeri Momen 1">
+            <img loading="lazy" src="assets/images/3.jpeg" alt="Galeri Momen 1">
             <div class="overlay-zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
           </div>
           <div class="galeri-item">
-            <img src="assets/images/4.jpeg" alt="Galeri Momen 2">
+            <img loading="lazy" src="assets/images/4.jpeg" alt="Galeri Momen 2">
             <div class="overlay-zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
           </div>
           <div class="galeri-item">
-            <img src="assets/images/5.jpeg" alt="Galeri Momen 3">
+            <img loading="lazy" src="assets/images/5.jpeg" alt="Galeri Momen 3">
             <div class="overlay-zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
           </div>
           <div class="galeri-item">
-            <img src="assets/images/6.jpeg" alt="Galeri Momen 4">
+            <img loading="lazy" src="assets/images/6.jpeg" alt="Galeri Momen 4">
             <div class="overlay-zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
           </div>
-          <div class="galeri-item item-besar">
-            <img src="assets/images/7.jpeg" alt="Galeri Momen 5">
+          <div class="galeri-item">
+            <img loading="lazy" src="assets/images/7.jpeg" alt="Galeri Momen 5">
             <div class="overlay-zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
           </div>
         </div>
