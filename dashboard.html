@@ -2,7 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#4E6151">
     <title>Dashboard Admin - Welling & Sheila</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,11 +19,10 @@
 <body>
 
     <div class="dashboard-wrapper">
-        <div class="dashboard-container">
+        <div class="dashboard-container kaca">
             
-            <!-- Section Login -->
             <div id="loginSection" class="page-section">
-                <div class="login-card">
+                <div class="login-card kaca">
                     <h2>DASHBOARD ADMIN<br>UNDANGAN PERNIKAHAN</h2>
 
                     <form id="loginForm">
@@ -37,48 +37,46 @@
                         </div>
 
                         <button type="submit" class="btn waves-effect waves-light btn-login">
-                            LOGIN
+                            MASUK
                         </button>
                     </form>
                 </div>
             </div>
 
-            <!-- Section Dashboard Utama -->
             <div id="dashboardSection" class="hidden">
                 <div class="dashboard-header">
                     <h1 class="header-title">PANEL PENGELOLA UNDANGAN</h1>
                     <div id="welcomeMessage" class="welcome-text"></div>
                 </div>
 
-                <div class="hero-section">
+                <div class="hero-section kaca">
                     <img src="gambar/cincin.avif" alt="Foto Cincin">
                 </div>
 
                 <div class="menu-container">
                     <div class="menu-grid">
-                        <a href="#!" onclick="showSection('mempelaiSection')" class="menu-card waves-effect">
+                        <a href="#!" onclick="showSection('mempelaiSection')" class="menu-card kaca waves-effect">
                             <i class="material-icons">favorite</i>
                             <span class="menu-text">DATA MEMPELAI</span>
                         </a>
-                        <a href="#!" onclick="showSection('galeriSection')" class="menu-card waves-effect">
+                        <a href="#!" onclick="showSection('galeriSection')" class="menu-card kaca waves-effect">
                             <i class="material-icons">photo_library</i>
                             <span class="menu-text">GALERI FOTO</span>
                         </a>
-                        <a href="#!" onclick="showSection('jadwalSection')" class="menu-card waves-effect">
+                        <a href="#!" onclick="showSection('jadwalSection')" class="menu-card kaca waves-effect">
                             <i class="material-icons">event</i>
                             <span class="menu-text">JADWAL &amp; LOKASI</span>
                         </a>
-                        <a href="#!" onclick="showSection('ucapanSection')" class="menu-card waves-effect">
+                        <a href="#!" onclick="showSection('ucapanSection')" class="menu-card kaca waves-effect">
                             <i class="material-icons">chat</i>
                             <span class="menu-text">UCAPAN &amp; RSVP</span>
                         </a>
                     </div>
 
-                    <button id="btnLogout" class="btn btn-logout waves-effect waves-dark">Keluar (Logout)</button>
+                    <button id="btnLogout" class="btn btn-logout waves-effect waves-dark">Keluar</button>
                 </div>
             </div>
 
-            <!-- Edit Mempelai -->
             <div id="mempelaiSection" class="page-section hidden">
                 <h1 class="header-title">EDIT DATA MEMPELAI</h1>
 
@@ -99,7 +97,6 @@
                 </div>
             </div>
 
-            <!-- Edit Galeri -->
             <div id="galeriSection" class="page-section hidden">
                 <h1 class="header-title">EDIT GALERI FOTO</h1>
 
@@ -118,7 +115,6 @@
                 </div>
             </div>
 
-            <!-- Edit Jadwal -->
             <div id="jadwalSection" class="page-section hidden">
                 <h1 class="header-title">EDIT JADWAL &amp; LOKASI</h1>
 
@@ -135,12 +131,11 @@
                 </div>
             </div>
 
-            <!-- Lihat Ucapan -->
             <div id="ucapanSection" class="page-section hidden">
                 <h1 class="header-title">DAFTAR UCAPAN &amp; RSVP</h1>
 
                 <div class="form-content">
-                    <div class="ucapan-card">
+                    <div class="ucapan-card kaca">
                         <div class="ucapan-sender">Budi &amp; Keluarga <span class="badge-rsvp">Hadir (2 Orang)</span></div>
                         <p class="ucapan-text">Selamat atas pernikahan Welling & Sheila! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah.</p>
                     </div>

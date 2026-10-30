@@ -6,7 +6,6 @@
   <meta name="theme-color" content="#4E6151">
   <title>Undangan Pernikahan - Welling & Sheila</title>
   
-  <!-- Font Google: Plus Jakarta Sans (Bold Modern) & Great Vibes -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
@@ -18,9 +17,9 @@
 </head>
 <body class="kunci-scroll">
 
-  <!-- Audio Backsound & Tombol Melayang -->
   <audio id="musik-latar" loop preload="none">
-    <source src="assets/music/musik-latar.mp3" type="audio/mpeg">
+    <source src="assets/music/SomethingGreaterInterlude.m4a" type="audio/mp4">
+    Browser kamu tidak mendukung elemen audio.
   </audio>
   
   <button id="tombol-musik" class="tombol-musik hidden" aria-label="Toggle Musik">
@@ -29,14 +28,13 @@
 
   <div class="wadah-utama">
 
-    <!-- Cover Sampul -->
     <header class="sampul" id="sampul">
       <div class="sampul-bg"></div>
       <div class="sampul-bg-overlay"></div>
       
       <div class="sampul-atas animasi-float">
-        <span class="badge-wedding">The Wedding Of</span>
-        <h1 class="nama-sampul">Welling <span class="ampersand">&amp;</span> Sheila</h1>
+        <span class="badge-wedding">Undangan Pernikahan</span>
+        <h1 class="nama-sampul nama-sampul-script">Welling <span class="ampersand">&amp;</span> Sheila</h1>
       </div>
 
       <div class="sampul-bawah">
@@ -51,12 +49,10 @@
       </div>
     </header>
 
-    <!-- Konten Utama -->
     <main id="konten" style="display: none;">
 
-      <!-- Pembuka & Kutipan -->
       <section class="bagian pembuka animasi-muncul">
-        <div class="pembuka-card">
+        <div class="pembuka-card kaca">
           <div class="hiasan-bunga-top"><i class="fa-solid fa-leaf"></i></div>
           <h2 class="label-tamu">Undangan Pernikahan</h2>
           <p class="salam">
@@ -85,9 +81,8 @@
         </div>
       </section>
 
-      <!-- Countdown Timer Section -->
-      <section class="bagian bagian-countdown animasi-muncul">
-        <h2 class="judul-bagian">COUNTDOWN HARI H</h2>
+      <section class="bagian bagian-countdown animasi-muncul kaca">
+        <h2 class="judul-bagian">Hitung Mundur Hari Bahagia</h2>
         <p class="subjudul-bagian">Menghitung hari menuju momen bahagia kami</p>
         
         <div class="countdown-grid" id="countdown">
@@ -110,12 +105,11 @@
         </div>
       </section>
 
-      <!-- Profil Mempelai -->
       <section class="bagian animasi-muncul">
-        <h2 class="judul-bagian">THE BRIDE &amp; GROOM</h2>
+        <h2 class="judul-bagian">Mempelai</h2>
 
         <div class="mempelai-grid">
-          <article class="profil-mempelai-card">
+          <article class="profil-mempelai-card kaca">
             <div class="foto-box">
               <img loading="lazy" src="assets/images/10.jpeg" alt="Sheila">
               <span class="badge-peran">Mempelai Wanita</span>
@@ -129,7 +123,7 @@
             </div>
           </article>
 
-          <article class="profil-mempelai-card">
+          <article class="profil-mempelai-card kaca">
             <div class="foto-box">
               <img loading="lazy" src="assets/images/11.jpeg" alt="Welling">
               <span class="badge-peran">Mempelai Pria</span>
@@ -145,12 +139,11 @@
         </div>
       </section>
 
-      <!-- Jadwal Acara -->
       <section class="bagian animasi-muncul">
-        <h2 class="judul-bagian">WEDDING EVENT</h2>
+        <h2 class="judul-bagian">Acara Pernikahan</h2>
 
         <div class="acara-grid">
-          <div class="acara-card">
+          <div class="acara-card kaca">
             <div class="icon-acara"><i class="fa-solid fa-hands-praying"></i></div>
             <h3 class="judul-acara">Akad Nikah</h3>
             <div class="detail-acara-item"><i class="fa-regular fa-calendar"></i> Minggu, 12 Desember 2027</div>
@@ -162,7 +155,7 @@
             </a>
           </div>
 
-          <div class="acara-card highlight">
+          <div class="acara-card highlight kaca">
             <div class="icon-acara"><i class="fa-solid fa-champagne-glasses"></i></div>
             <h3 class="judul-acara">Resepsi</h3>
             <div class="detail-acara-item"><i class="fa-regular fa-calendar"></i> Minggu, 12 Desember 2027</div>
@@ -178,14 +171,13 @@
         <div class="banner-acara">
           <img loading="lazy" class="foto-acara" src="assets/images/8.jpeg" alt="Tukar Cincin">
           <button class="tombol tombol-std" id="tombol-save-date">
-            <i class="fa-solid fa-calendar-plus"></i> Simpan ke Kalender (Save The Date)
+            <i class="fa-solid fa-calendar-plus"></i> Simpan ke Kalender
           </button>
         </div>
       </section>
 
-      <!-- Galeri Foto Modern Asymmetrical Grid -->
       <section class="bagian animasi-muncul">
-        <h2 class="judul-bagian">OUR GALLERY</h2>
+        <h2 class="judul-bagian">Galeri Kami</h2>
         <p class="petunjuk-galeri"><i class="fa-solid fa-hand-pointer"></i> Klik foto untuk memperbesar &amp; melihat slide</p>
         
         <div class="galeri-foto-modern" id="galeri-foto">
@@ -209,12 +201,15 @@
             <img loading="lazy" src="assets/images/7.jpeg" alt="Galeri Momen 5">
             <div class="overlay-zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
           </div>
+          <div class="galeri-item item-besar">
+            <img loading="lazy" src="assets/images/9.jpeg" alt="Galeri Momen 6">
+            <div class="overlay-zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
+          </div>
         </div>
       </section>
 
-      <!-- Our Journey (Timeline) -->
       <section class="bagian animasi-muncul">
-        <h2 class="judul-bagian">OUR JOURNEY</h2>
+        <h2 class="judul-bagian">Perjalanan Kami</h2>
         <div class="timeline">
           
           <div class="timeline-item left">
@@ -247,13 +242,12 @@
         </div>
       </section>
 
-      <!-- Fitur Kado Digital / Amplop Digital -->
       <section class="bagian animasi-muncul">
-        <h2 class="judul-bagian">DIGITAL GIFT</h2>
+        <h2 class="judul-bagian">Hadiah Digital</h2>
         <p class="subjudul-bagian">Doa restu Anda adalah hadiah terindah. Bagi yang ingin memberikan tanda kasih, dapat mengirimkannya melalui:</p>
 
         <div class="amplop-grid">
-          <div class="amplop-card">
+          <div class="amplop-card kaca">
             <div class="logo-bank"><i class="fa-solid fa-building-columns"></i> Bank BCA</div>
             <p class="no-rek" id="rek-bca">1234 5678 90</p>
             <p class="pemilik-rek">a.n. Welling Simangunsong</p>
@@ -262,7 +256,7 @@
             </button>
           </div>
 
-          <div class="amplop-card">
+          <div class="amplop-card kaca">
             <div class="logo-bank"><i class="fa-solid fa-building-columns"></i> Bank Mandiri</div>
             <p class="no-rek" id="rek-mandiri">0987 6543 21</p>
             <p class="pemilik-rek">a.n. Sheila Nurhaliza</p>
@@ -273,14 +267,13 @@
         </div>
       </section>
 
-      <!-- Form Ucapan & RSVP Kehadiran -->
       <section class="bagian bagian-ucapan animasi-muncul">
-        <h2 class="judul-bagian">RSVP &amp; WISHES</h2>
+        <h2 class="judul-bagian">Konfirmasi &amp; Ucapan</h2>
         <p class="pengantar-ucapan">Konfirmasi kehadiran Anda &amp; berikan ucapan hangat untuk kedua mempelai</p>
 
         <div id="pesan-status" class="pemberitahuan" style="display: none;"></div>
 
-        <form id="formulir-ucapan" class="formulir-ucapan">
+        <form id="formulir-ucapan" class="formulir-ucapan kaca">
           <div class="baris-input">
             <label for="input-nama">Nama Lengkap</label>
             <input type="text" id="input-nama" placeholder="Masukkan nama Anda..." required>
@@ -323,20 +316,19 @@
           </button>
         </form>
 
-        <div class="daftar-ucapan-wrapper">
+        <div class="daftar-ucapan-wrapper kaca">
           <h3><i class="fa-solid fa-comments"></i> Ucapan &amp; Doa Tamu</h3>
           <div id="daftar-ucapan" class="daftar-ucapan"></div>
         </div>
       </section>
 
       <footer class="catatan-bawah">
-        <p>Created with <i class="fa-solid fa-heart pulse"></i> for Welling &amp; Sheila</p>
+        <p>Dibuat dengan <i class="fa-solid fa-heart pulse"></i> untuk Welling &amp; Sheila</p>
       </footer>
     </main>
 
   </div>
 
-  <!-- Modal Lightbox Gallery Slider -->
   <div id="lightbox-modal" class="lightbox-modal" aria-hidden="true">
     <button class="lightbox-close" id="lightbox-close" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
     <button class="lightbox-prev" id="lightbox-prev" aria-label="Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
@@ -346,7 +338,6 @@
     <button class="lightbox-next" id="lightbox-next" aria-label="Selanjutnya"><i class="fa-solid fa-chevron-right"></i></button>
   </div>
 
-  <!-- Toast Notification Box -->
   <div id="toast-box" class="toast-box"></div>
 
 </body>

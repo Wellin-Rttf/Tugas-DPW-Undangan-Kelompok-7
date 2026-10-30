@@ -5,18 +5,27 @@
     --c-tea: #C5D8A4;
     --c-dark: #1C1C1E;
     --font-bold: 'Plus Jakarta Sans', sans-serif;
+
+    --glass-bg: rgba(255, 255, 255, 0.5);
+    --glass-bg-kuat: rgba(255, 255, 255, 0.72);
+    --glass-border: rgba(255, 255, 255, 0.55);
+    --glass-blur: blur(18px);
+    --shadow-glass: 0 14px 36px rgba(28, 28, 30, 0.28);
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0; padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
     font-family: var(--font-bold);
-    background-color: var(--c-dark);
     color: var(--c-dark);
     min-height: 100vh;
+    background-color: #2f3a30;
+    background-image:
+        radial-gradient(40vw 40vw at 10% 10%, rgba(233, 196, 106, 0.45), transparent 60%),
+        radial-gradient(45vw 45vw at 90% 20%, rgba(197, 216, 164, 0.4), transparent 60%),
+        radial-gradient(50vw 50vw at 20% 95%, rgba(78, 97, 81, 0.6), transparent 60%),
+        linear-gradient(160deg, #263128 0%, #1c1c1e 100%);
+    background-attachment: fixed;
 }
 
 .hidden { display: none !important; }
@@ -26,57 +35,90 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    min-height: 100dvh;
     padding: 20px;
+}
+
+.kaca,
+.dashboard-container,
+.login-card,
+.hero-section,
+.menu-card,
+.ucapan-card {
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: var(--glass-blur);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
 }
 
 .dashboard-container {
     width: 100%;
     max-width: 620px;
-    background-color: var(--c-beige);
     border-radius: 28px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-glass);
     overflow: hidden;
     padding: 30px;
 }
 
 .header-title {
     font-size: 1.4rem;
-    font-weight: 800;
+    font-weight: 700;
     text-align: center;
     color: var(--c-granite);
     margin-bottom: 15px;
 }
 
 .login-card {
-    background: #ffffff;
+    background: var(--glass-bg-kuat);
     border-radius: 24px;
     padding: 35px 25px;
-    border: 2px solid var(--c-tea);
     text-align: center;
 }
 
 .login-card h2 {
     font-size: 1.2rem;
-    font-weight: 800;
+    font-weight: 700;
     color: var(--c-granite);
     margin-bottom: 25px;
 }
 
+.input-field {
+    margin-bottom: 1.2rem;
+}
+
+.input-field input[type="text"],
+.input-field input[type="password"] {
+    background-color: rgba(255, 255, 255, 0.45) !important;
+    border-bottom: 1.5px solid rgba(78, 97, 81, 0.3) !important;
+    border-radius: 10px 10px 0 0;
+    padding-left: 10px !important;
+    box-shadow: none !important;
+}
+
+.input-field input:focus {
+    border-bottom: 1.5px solid var(--c-granite) !important;
+    box-shadow: none !important;
+}
+
+.input-field label { color: #5a6a5c !important; }
+.input-field label.active { color: var(--c-granite) !important; }
+
 .btn-login {
-    background-color: var(--c-granite) !important;
+    background-color: rgba(78, 97, 81, 0.92) !important;
     color: #ffffff !important;
     width: 100%;
     border-radius: 50px !important;
     height: 45px !important;
     line-height: 45px !important;
-    font-weight: 800;
+    font-weight: 700;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18) !important;
 }
 
 .welcome-text {
     text-align: center;
     font-size: 0.88rem;
     font-weight: 700;
-    color: #555;
+    color: #4b5146;
     margin-bottom: 15px;
 }
 
@@ -86,34 +128,36 @@ body {
     border-radius: 20px;
     overflow: hidden;
     margin-bottom: 20px;
-    border: 3px solid var(--c-tea);
+    padding: 4px;
 }
 
 .hero-section img {
     width: 100%; height: 100%;
     object-fit: cover;
+    border-radius: 16px;
 }
 
 .menu-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 15px;
 }
 
 .menu-card {
-    background-color: #ffffff;
     border-radius: 20px;
     padding: 20px;
-    border: 2px solid var(--c-tea);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, background 0.2s ease;
 }
 
-.menu-card:hover { transform: translateY(-4px); }
+.menu-card:hover {
+    transform: translateY(-4px);
+    background: var(--glass-bg-kuat);
+}
 
 .menu-card i {
     font-size: 2.2rem;
@@ -123,18 +167,19 @@ body {
 
 .menu-text {
     font-size: 0.8rem;
-    font-weight: 800;
+    font-weight: 700;
     color: var(--c-dark);
+    text-align: center;
 }
 
 .btn-logout {
-    background-color: var(--c-dark) !important;
+    background-color: rgba(28, 28, 30, 0.85) !important;
     color: var(--c-mustard) !important;
     width: 100%;
     border-radius: 50px !important;
     height: 45px !important;
     margin-top: 25px;
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .form-content {
@@ -145,25 +190,25 @@ body {
 
 .input-group-label {
     font-size: 0.85rem;
-    font-weight: 800;
+    font-weight: 700;
     color: var(--c-granite);
     margin-top: 10px;
 }
 
 .custom-input {
     width: 100% !important;
-    background-color: #ffffff !important;
-    border: 2px solid var(--c-tea) !important;
+    background-color: rgba(255, 255, 255, 0.5) !important;
+    border: 1.5px solid rgba(78, 97, 81, 0.25) !important;
     border-radius: 12px !important;
     padding: 0 15px !important;
     height: 42px !important;
     box-sizing: border-box !important;
-    font-size: 0.85rem !important;
+    font-size: 16px !important;
 }
 
 .file-upload-box {
     position: relative;
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.4);
     border: 2px dashed var(--c-granite);
     border-radius: 12px;
     height: 42px;
@@ -181,26 +226,25 @@ body {
 }
 
 .btn-bottom-action {
-    background-color: var(--c-granite) !important;
+    background-color: rgba(78, 97, 81, 0.92) !important;
     color: #ffffff !important;
     width: 100%;
     border-radius: 50px !important;
     height: 45px !important;
     line-height: 45px !important;
     margin-top: 20px;
-    font-weight: 800;
+    font-weight: 700;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18) !important;
 }
 
 .ucapan-card {
-    background-color: #ffffff;
     border-radius: 16px;
     padding: 15px;
-    border: 2px solid var(--c-tea);
     margin-bottom: 10px;
 }
 
 .ucapan-sender {
-    font-weight: 800;
+    font-weight: 700;
     font-size: 0.85rem;
     color: var(--c-granite);
 }
@@ -216,6 +260,18 @@ body {
 
 .ucapan-text {
     font-size: 0.82rem;
-    color: #555;
+    color: #333;
     margin-top: 5px;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .kaca, .dashboard-container, .login-card, .hero-section, .menu-card, .ucapan-card {
+        background-color: #f3f1e6 !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-container { padding: 22px 18px; border-radius: 24px; }
+    .menu-grid { grid-template-columns: repeat(2, 1fr); }
+    .header-title { font-size: 1.2rem; }
 }

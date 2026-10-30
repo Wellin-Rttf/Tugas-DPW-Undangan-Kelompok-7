@@ -11,7 +11,6 @@ const tombolMusik = document.getElementById('tombol-musik');
 const toastBox = document.getElementById('toast-box');
 const tombolSaveDate = document.getElementById('tombol-save-date');
 
-// ---------- Ucapan (LocalStorage) ----------
 let dataUcapan = [];
 
 try {
@@ -20,7 +19,6 @@ try {
   dataUcapan = [];
 }
 
-// Cegah HTML/script dari input tamu ikut dieksekusi
 function bersihkanTeks(teks) {
   const el = document.createElement('div');
   el.textContent = teks;
@@ -47,34 +45,14 @@ function tampilkanUcapan() {
   }).join('');
 }
 
-// ---------- Musik latar ----------
-// File musik ditaruh di assets/music/musik-latar.mp3.
-// Kalau file belum ada, tombol musik otomatis disembunyikan.
-let musikTersedia = true;
 
-if (musikLatar) {
-  const sumberMusik = musikLatar.querySelector('source');
-  if (sumberMusik) {
-    sumberMusik.addEventListener('error', function () {
-      musikTersedia = false;
-      tombolMusik.classList.add('hidden');
-    });
-  }
-}
-
-function putarMusik() {
-  if (!musikLatar || !musikTersedia) return;
-
-  tombolMusik.classList.remove('hidden');
-  musikLatar.play()
-    .then(() => tombolMusik.classList.remove('paused'))
-    .catch(() => tombolMusik.classList.add('paused'));
-}
-
-// Buka Undangan
 tombolBuka.addEventListener('click', function () {
   sampul.style.transform = 'translateY(-100%)';
-  putarMusik();
+
+  if (musikLatar) {
+    musikLatar.play().catch(e => console.log('Autoplay ditahan browser:', e));
+    tombolMusik.classList.remove('hidden');
+  }
 
   setTimeout(function () {
     sampul.style.display = 'none';
@@ -86,7 +64,6 @@ tombolBuka.addEventListener('click', function () {
   }, 700);
 });
 
-// Play/Pause
 tombolMusik.addEventListener('click', function () {
   if (musikLatar.paused) {
     musikLatar.play().then(() => tombolMusik.classList.remove('paused')).catch(() => {});
@@ -96,14 +73,12 @@ tombolMusik.addEventListener('click', function () {
   }
 });
 
-// ---------- Toast ----------
 function tampilkanToast(pesan) {
   toastBox.textContent = pesan;
   toastBox.classList.add('tampil');
   setTimeout(() => toastBox.classList.remove('tampil'), 3000);
 }
 
-// ---------- Salin rekening ----------
 function salinTeks(elementId, pesanSukses) {
   const teks = document.getElementById(elementId).innerText;
   navigator.clipboard.writeText(teks)
@@ -111,14 +86,12 @@ function salinTeks(elementId, pesanSukses) {
     .catch(() => tampilkanToast('Gagal menyalin, silakan salin manual.'));
 }
 
-// ---------- Save The Date ----------
 tombolSaveDate.addEventListener('click', function () {
   const gCalUrl = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Pernikahan+Welling+%26+Sheila&dates=20271212T080000/20271212T160000&details=Acara+Pernikahan+Welling+%26+Sheila.&location=Hotel+Pangeran+Pekanbaru";
   window.open(gCalUrl, '_blank');
   tampilkanToast('Membuka Kalender Google...');
 });
 
-// ---------- Form RSVP ----------
 formulirUcapan.addEventListener('submit', function (e) {
   e.preventDefault();
 
@@ -141,7 +114,6 @@ formulirUcapan.addEventListener('submit', function (e) {
   }
 });
 
-// ---------- Countdown ----------
 function jalankanCountdown() {
   const tglAcara = new Date('December 12, 2027 08:00:00').getTime();
   const dua = (n) => (n < 10 ? '0' + n : n);
@@ -156,11 +128,10 @@ function jalankanCountdown() {
     document.getElementById('cd-detik').textContent = dua(Math.floor((selisih % 60000) / 1000));
   }
 
-  hitung(); // tampil langsung, tidak menunggu 1 detik
+  hitung();
   setInterval(hitung, 1000);
 }
 
-// ---------- Scroll reveal ----------
 function jalankanAnimasiMuncul() {
   const observer = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
@@ -174,7 +145,6 @@ function jalankanAnimasiMuncul() {
   document.querySelectorAll('.animasi-muncul').forEach((el) => observer.observe(el));
 }
 
-// ---------- Lightbox galeri ----------
 const lightboxModal = document.getElementById('lightbox-modal');
 const lightboxImg = document.getElementById('lightbox-img');
 const lightboxClose = document.getElementById('lightbox-close');
@@ -218,12 +188,10 @@ lightboxClose.addEventListener('click', closeLightbox);
 lightboxNext.addEventListener('click', fotoBerikutnya);
 lightboxPrev.addEventListener('click', fotoSebelumnya);
 
-// Klik area gelap untuk menutup
 lightboxModal.addEventListener('click', (e) => {
   if (e.target === lightboxModal) closeLightbox();
 });
 
-// Keyboard (PC)
 document.addEventListener('keydown', (e) => {
   if (!lightboxModal.classList.contains('aktif')) return;
   if (e.key === 'Escape') closeLightbox();
@@ -231,7 +199,6 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft') fotoSebelumnya();
 });
 
-// Geser kiri/kanan (HP)
 let sentuhAwalX = 0;
 lightboxModal.addEventListener('touchstart', (e) => {
   sentuhAwalX = e.changedTouches[0].clientX;
