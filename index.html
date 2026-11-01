@@ -17,6 +17,8 @@
 </head>
 <body class="kunci-scroll">
 
+  <div class="latar-wallpaper" aria-hidden="true"></div>
+
   <audio id="musik-latar" loop preload="none">
     <source src="assets/music/SomethingGreaterInterlude.m4a" type="audio/mp4">
     Browser kamu tidak mendukung elemen audio. 
@@ -29,9 +31,6 @@
   <div class="wadah-utama">
 
     <header class="sampul" id="sampul">
-      <div class="sampul-bg"></div>
-      <div class="sampul-bg-overlay"></div>
-      
       <div class="sampul-atas animasi-float">
         <span class="badge-wedding">Undangan Pernikahan</span>
         <h1 class="nama-sampul nama-sampul-script">Welling <span class="ampersand">&amp;</span> Sheila</h1>
@@ -51,8 +50,8 @@
 
     <main id="konten" style="display: none;">
 
-      <section class="bagian pembuka animasi-muncul">
-        <div class="pembuka-card kaca">
+      <section class="bagian pembuka">
+        <div class="pembuka-card kaca animasi-muncul">
           <div class="hiasan-bunga-top"><i class="fa-solid fa-leaf"></i></div>
           <h2 class="label-tamu">Undangan Pernikahan</h2>
           <p class="salam">
@@ -71,7 +70,7 @@
           </div>
           
           <div class="foto-mempelai-wrapper">
-            <img class="foto-mempelai" src="assets/images/2.jpeg" alt="Welling dan Sheila">
+            <img class="foto-mempelai" src="assets/images/2.jpg" alt="Welling dan Sheila">
           </div>
           
           <blockquote class="kutipan-ayat">
@@ -81,7 +80,8 @@
         </div>
       </section>
 
-      <section class="bagian bagian-countdown animasi-muncul kaca">
+      <section class="bagian">
+        <div class="countdown-card animasi-muncul">
         <h2 class="judul-bagian">Hitung Mundur Hari Bahagia</h2>
         <p class="subjudul-bagian">Menghitung hari menuju momen bahagia kami</p>
         
@@ -103,137 +103,134 @@
             <small>Detik</small>
           </div>
         </div>
+        </div>
       </section>
 
-      <section class="bagian animasi-muncul">
-        <h2 class="judul-bagian">Mempelai</h2>
+      <section class="bagian">
+        <h2 class="judul-bagian animasi-muncul">Mempelai</h2>
 
         <div class="mempelai-grid">
-          <article class="profil-mempelai-card kaca">
+          <article class="profil-mempelai-card kaca animasi-muncul">
             <div class="foto-box">
-              <img loading="lazy" src="assets/images/10.jpeg" alt="Sheila">
+              <img loading="lazy" src="assets/images/sheila.jpg" alt="Sheila">
               <span class="badge-peran">Mempelai Wanita</span>
             </div>
             <div class="info-mempelai">
               <h3>Sheila</h3>
               <p class="anak-dari">Putri Pertama dari<br><strong>Bapak Budi &amp; Ibu Tia</strong></p>
-              <a class="ig-mempelai" href="https://instagram.com" target="_blank">
-                <i class="fa-brands fa-instagram"></i> @sheila
+              <a class="ig-mempelai" href="https://www.instagram.com/idiotic_isg14/" target="_blank">
+                <i class="fa-brands fa-instagram"></i> @idiotic_isg14
               </a>
             </div>
           </article>
 
-          <article class="profil-mempelai-card kaca">
+          <article class="profil-mempelai-card kaca animasi-muncul">
             <div class="foto-box">
-              <img loading="lazy" src="assets/images/11.jpeg" alt="Welling">
+              <img loading="lazy" src="assets/images/welling.jpg" alt="Welling">
               <span class="badge-peran">Mempelai Pria</span>
             </div>
             <div class="info-mempelai">
-              <h3>Welling</h3>
+              <h3>Wellington</h3>
               <p class="anak-dari">Putra Pertama dari<br><strong>Bapak Agung &amp; Ibu Fabriani</strong></p>
-              <a class="ig-mempelai" href="https://instagram.com" target="_blank">
-                <i class="fa-brands fa-instagram"></i> @welling
+              <a class="ig-mempelai" href="https://www.instagram.com/wellin_rttf/" target="_blank">
+                <i class="fa-brands fa-instagram"></i> @wellin_rttf
               </a>
             </div>
           </article>
         </div>
       </section>
 
-      <section class="bagian animasi-muncul">
-        <h2 class="judul-bagian">Acara Pernikahan</h2>
+      <section class="bagian">
+        <h2 class="judul-bagian animasi-muncul">Acara Pernikahan</h2>
 
         <div class="acara-grid">
-          <div class="acara-card kaca">
+          <div class="acara-card kaca animasi-muncul">
             <div class="icon-acara"><i class="fa-solid fa-hands-praying"></i></div>
             <h3 class="judul-acara">Akad Nikah</h3>
             <div class="detail-acara-item"><i class="fa-regular fa-calendar"></i> Minggu, 12 Desember 2027</div>
             <div class="detail-acara-item"><i class="fa-regular fa-clock"></i> 08.00 - 10.00 WIB</div>
             <p class="tempat-acara">Masjid Agung Ar-Rahman</p>
             <p class="alamat-acara">Jl. Jend. Sudirman No.482, Jadirejo, Sukajadi, Pekanbaru</p>
-            <a class="tombol tombol-outline" href="https://maps.google.com" target="_blank">
+            <a class="tombol tombol-outline" href="https://maps.app.goo.gl/KANwJdkuEMhPcTgu9" target="_blank">
               <i class="fa-solid fa-diamond-turn-right"></i> Petunjuk Lokasi
             </a>
           </div>
 
-          <div class="acara-card highlight kaca">
+          <div class="acara-card highlight kaca animasi-muncul">
             <div class="icon-acara"><i class="fa-solid fa-champagne-glasses"></i></div>
             <h3 class="judul-acara">Resepsi</h3>
             <div class="detail-acara-item"><i class="fa-regular fa-calendar"></i> Minggu, 12 Desember 2027</div>
             <div class="detail-acara-item"><i class="fa-regular fa-clock"></i> 13.00 - 16.00 WIB</div>
             <p class="tempat-acara">Hotel Pangeran Pekanbaru</p>
             <p class="alamat-acara">Jl. Jend. Sudirman No. 371-373, Cinta Raja, Sail, Pekanbaru</p>
-            <a class="tombol tombol-outline" href="https://maps.google.com" target="_blank">
+            <a class="tombol tombol-outline" href="https://maps.app.goo.gl/EVSfCEsKQkcV4xCF9" target="_blank">
               <i class="fa-solid fa-diamond-turn-right"></i> Petunjuk Lokasi
             </a>
           </div>
         </div>
 
-        <div class="banner-acara">
-          <img loading="lazy" class="foto-acara" src="assets/images/8.jpeg" alt="Tukar Cincin">
+        <div class="banner-acara animasi-muncul">
+          <img loading="lazy" class="foto-acara" src="assets/images/8.jpg" alt="Tukar Cincin">
           <button class="tombol tombol-std" id="tombol-save-date">
             <i class="fa-solid fa-calendar-plus"></i> Simpan ke Kalender
           </button>
         </div>
       </section>
 
-      <section class="bagian animasi-muncul">
-        <h2 class="judul-bagian">Galeri Kami</h2>
-        <p class="petunjuk-galeri"><i class="fa-solid fa-hand-pointer"></i> Klik foto untuk memperbesar &amp; melihat slide</p>
+      <section class="bagian">
+        <h2 class="judul-bagian animasi-muncul">Galeri Kami</h2>
+        <p class="petunjuk-galeri animasi-muncul"><i class="fa-solid fa-hand-pointer"></i> Klik foto untuk memperbesar &amp; melihat slide</p>
         
         <div class="galeri-foto-modern" id="galeri-foto">
-          <div class="galeri-item item-besar">
-            <img loading="lazy" src="assets/images/3.jpeg" alt="Galeri Momen 1">
+          <div class="galeri-item item-besar animasi-muncul">
+            <img loading="lazy" src="assets/images/3.jpg" alt="Galeri Momen 1">
             <div class="overlay-zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
           </div>
-          <div class="galeri-item">
-            <img loading="lazy" src="assets/images/4.jpeg" alt="Galeri Momen 2">
+          <div class="galeri-item animasi-muncul">
+            <img loading="lazy" src="assets/images/4.jpg" alt="Galeri Momen 2">
             <div class="overlay-zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
           </div>
-          <div class="galeri-item">
-            <img loading="lazy" src="assets/images/5.jpeg" alt="Galeri Momen 3">
+          <div class="galeri-item animasi-muncul">
+            <img loading="lazy" src="assets/images/5.jpg" alt="Galeri Momen 3">
             <div class="overlay-zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
           </div>
-          <div class="galeri-item">
-            <img loading="lazy" src="assets/images/6.jpeg" alt="Galeri Momen 4">
+          <div class="galeri-item animasi-muncul">
+            <img loading="lazy" src="assets/images/6.jpg" alt="Galeri Momen 4">
             <div class="overlay-zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
           </div>
-          <div class="galeri-item">
-            <img loading="lazy" src="assets/images/7.jpeg" alt="Galeri Momen 5">
-            <div class="overlay-zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
-          </div>
-          <div class="galeri-item item-besar">
-            <img loading="lazy" src="assets/images/9.jpeg" alt="Galeri Momen 6">
+          <div class="galeri-item animasi-muncul">
+            <img loading="lazy" src="assets/images/7.jpg" alt="Galeri Momen 5">
             <div class="overlay-zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
           </div>
         </div>
       </section>
 
-      <section class="bagian animasi-muncul">
-        <h2 class="judul-bagian">Perjalanan Kami</h2>
+      <section class="bagian">
+        <h2 class="judul-bagian animasi-muncul">Perjalanan Kami</h2>
         <div class="timeline">
           
           <div class="timeline-item left">
-            <div class="timeline-dot"><i class="fa-solid fa-heart"></i></div>
-            <div class="timeline-content">
-              <span class="timeline-year">2020</span>
+            <div class="timeline-dot animasi-muncul"><i class="fa-solid fa-heart"></i></div>
+            <div class="timeline-content kaca animasi-muncul">
+              <span class="timeline-year">2024</span>
               <h3>Awal Pertemuan</h3>
               <p>Kami bertemu pertama kali di sebuah acara kampus. Sapaan singkat yang sederhana tumbuh menjadi ketertarikan untuk saling mengenal lebih dekat.</p>
             </div>
           </div>
 
           <div class="timeline-item right">
-            <div class="timeline-dot"><i class="fa-solid fa-hand-holding-heart"></i></div>
-            <div class="timeline-content">
-              <span class="timeline-year">2022</span>
+            <div class="timeline-dot animasi-muncul"><i class="fa-solid fa-hand-holding-heart"></i></div>
+            <div class="timeline-content kaca animasi-muncul">
+              <span class="timeline-year">2025</span>
               <h3>Menjalin Hubungan</h3>
               <p>Kami resmi berkomitmen untuk berjalan bersama. Saling mendukung dalam suka dan duka, serta tumbuh menjadi versi terbaik diri masing-masing.</p>
             </div>
           </div>
 
           <div class="timeline-item left">
-            <div class="timeline-dot"><i class="fa-solid fa-ring"></i></div>
-            <div class="timeline-content">
-              <span class="timeline-year">2024</span>
+            <div class="timeline-dot animasi-muncul"><i class="fa-solid fa-ring"></i></div>
+            <div class="timeline-content kaca animasi-muncul">
+              <span class="timeline-year">2026</span>
               <h3>Langkah Menuju Halal</h3>
               <p>Dengan restu kedua orang tua, kami mantap mengikat janji suci untuk melangkah ke jenjang pernikahan dan mengarungi masa depan bersama.</p>
             </div>
@@ -242,10 +239,18 @@
         </div>
       </section>
 
-      <section class="bagian animasi-muncul">
-        <h2 class="judul-bagian">Hadiah Digital</h2>
-        <p class="subjudul-bagian">Doa restu Anda adalah hadiah terindah. Bagi yang ingin memberikan tanda kasih, dapat mengirimkannya melalui:</p>
+      <section class="bagian">
+        <h2 class="judul-bagian animasi-muncul">Hadiah Digital</h2>
+        <p class="subjudul-bagian animasi-muncul">Doa restu Anda adalah hadiah terindah. Bagi yang ingin memberikan tanda kasih, dapat mengirimkannya melalui:</p>
 
+        <button type="button" class="tombol tombol-std tombol-toggle animasi-muncul" id="tombol-hadiah" aria-expanded="false" aria-controls="panel-hadiah">
+          <i class="fa-solid fa-gift"></i>
+          <span id="teks-tombol-hadiah">Tampilkan Rekening</span>
+          <i class="fa-solid fa-chevron-down ikon-panah"></i>
+        </button>
+
+        <div class="panel-hadiah" id="panel-hadiah">
+         <div class="panel-hadiah-isi">
         <div class="amplop-grid">
           <div class="amplop-card kaca">
             <div class="logo-bank"><i class="fa-solid fa-building-columns"></i> Bank BCA</div>
@@ -265,15 +270,17 @@
             </button>
           </div>
         </div>
+         </div>
+        </div>
       </section>
 
-      <section class="bagian bagian-ucapan animasi-muncul">
-        <h2 class="judul-bagian">Konfirmasi &amp; Ucapan</h2>
-        <p class="pengantar-ucapan">Konfirmasi kehadiran Anda &amp; berikan ucapan hangat untuk kedua mempelai</p>
+      <section class="bagian bagian-ucapan">
+        <h2 class="judul-bagian animasi-muncul">Konfirmasi &amp; Ucapan</h2>
+        <p class="pengantar-ucapan subjudul-bagian animasi-muncul">Konfirmasi kehadiran Anda &amp; berikan ucapan hangat untuk kedua mempelai</p>
 
         <div id="pesan-status" class="pemberitahuan" style="display: none;"></div>
 
-        <form id="formulir-ucapan" class="formulir-ucapan kaca">
+        <form id="formulir-ucapan" class="formulir-ucapan kaca animasi-muncul">
           <div class="baris-input">
             <label for="input-nama">Nama Lengkap</label>
             <input type="text" id="input-nama" placeholder="Masukkan nama Anda..." required>
@@ -298,12 +305,19 @@
           </div>
 
           <div class="baris-input">
-            <label for="input-jumlah">Jumlah Tamu Hadir</label>
-            <select id="input-jumlah" class="custom-select">
-              <option value="1 Orang">1 Orang</option>
-              <option value="2 Orang">2 Orang</option>
-              <option value="3+ Orang">3+ Orang</option>
-            </select>
+            <label id="label-jumlah">Jumlah Tamu Hadir</label>
+            <div class="dropdown" id="dropdown-jumlah">
+              <input type="hidden" id="input-jumlah" value="1 Orang">
+              <button type="button" class="dropdown-tombol" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="label-jumlah">
+                <span class="dropdown-teks">1 Orang</span>
+                <i class="fa-solid fa-chevron-down"></i>
+              </button>
+              <ul class="dropdown-daftar" role="listbox" aria-labelledby="label-jumlah">
+                <li class="dropdown-opsi aktif" role="option" tabindex="0" aria-selected="true" data-nilai="1 Orang">1 Orang</li>
+                <li class="dropdown-opsi" role="option" tabindex="0" aria-selected="false" data-nilai="2 Orang">2 Orang</li>
+                <li class="dropdown-opsi" role="option" tabindex="0" aria-selected="false" data-nilai="3+ Orang">3+ Orang</li>
+              </ul>
+            </div>
           </div>
 
           <div class="baris-input">
@@ -316,9 +330,19 @@
           </button>
         </form>
 
-        <div class="daftar-ucapan-wrapper kaca">
+        <div class="daftar-ucapan-wrapper kaca animasi-muncul">
           <h3><i class="fa-solid fa-comments"></i> Ucapan &amp; Doa Tamu</h3>
           <div id="daftar-ucapan" class="daftar-ucapan"></div>
+          <nav id="paginasi-ucapan" class="paginasi" aria-label="Halaman ucapan"></nav>
+        </div>
+      </section>
+
+      <section class="bagian bagian-penutup">
+        <div class="penutup-konten animasi-muncul">
+          <div class="hiasan-bunga-top"><i class="fa-solid fa-leaf"></i></div>
+          <p class="penutup-teks">Terima kasih atas doa, restu, dan kehadiran Anda. Semoga kebahagiaan ini turut menyertai kita semua.</p>
+          <p class="penutup-salam">Wassalamu'alaikum Warahmatullahi Wabarakatuh</p>
+          <p class="penutup-nama">Welling &amp; Sheila</p>
         </div>
       </section>
 

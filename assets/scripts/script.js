@@ -25,25 +25,57 @@ function bersihkanTeks(teks) {
   return el.innerHTML;
 }
 
-function tampilkanUcapan() {
-  if (dataUcapan.length === 0) {
-    daftarUcapan.innerHTML = '<p class="teks-kosong" style="text-align:center; font-style:italic; opacity:0.7;">Belum ada ucapan & konfirmasi kehadiran. Jadilah yang pertama!</p>';
-    return;
-  }
+const UCAPAN_PER_HALAMAN = 5;
+let halamanUcapan = 1;
+const paginasiUcapan = document.getElementById('paginasi-ucapan');
 
-  daftarUcapan.innerHTML = dataUcapan.map(function (item) {
-    return `
+function tampilkanUcapan() {
+  const total = Math.max(1, Math.ceil(dataUcapan.length / UCAPAN_PER_HALAMAN));
+  halamanUcapan = Math.min(halamanUcapan, total);
+
+  if (dataUcapan.length === 0) {
+    daftarUcapan.innerHTML = '<p class="teks-kosong">Belum ada ucapan & konfirmasi kehadiran. Jadilah yang pertama!</p>';
+  } else {
+    const awal = (halamanUcapan - 1) * UCAPAN_PER_HALAMAN;
+    daftarUcapan.innerHTML = dataUcapan.slice(awal, awal + UCAPAN_PER_HALAMAN).map(function (item) {
+      return `
       <div class="kartu-ucapan">
         <div class="baris-nama">
           <strong>${bersihkanTeks(item.nama)}</strong>
           <span class="badge-rsvp-item">${bersihkanTeks(item.rsvp)} (${bersihkanTeks(item.jumlah)})</span>
         </div>
         <p>${bersihkanTeks(item.pesan)}</p>
-        <small style="font-size: 0.7rem; color: #777; display:block; margin-top:0.4rem;">${bersihkanTeks(item.tanggal)}</small>
+        <small class="tanggal-ucapan">${bersihkanTeks(item.tanggal)}</small>
       </div>
     `;
-  }).join('');
+    }).join('');
+  }
+
+  tampilkanPaginasi(total);
 }
+
+function tampilkanPaginasi(total) {
+  // belum lebih dari 1 halaman: nomor 1 saja, diabu-abukan
+  if (total === 1) {
+    paginasiUcapan.innerHTML = '<button type="button" class="nonaktif" disabled aria-label="Halaman 1">1</button>';
+    return;
+  }
+
+  let html = `<button type="button" data-halaman="${halamanUcapan - 1}" aria-label="Sebelumnya" ${halamanUcapan === 1 ? 'disabled class="nonaktif"' : ''}><i class="fa-solid fa-chevron-left"></i></button>`;
+  for (let i = 1; i <= total; i++) {
+    html += `<button type="button" data-halaman="${i}" ${i === halamanUcapan ? 'class="aktif" aria-current="page"' : ''}>${i}</button>`;
+  }
+  html += `<button type="button" data-halaman="${halamanUcapan + 1}" aria-label="Berikutnya" ${halamanUcapan === total ? 'disabled class="nonaktif"' : ''}><i class="fa-solid fa-chevron-right"></i></button>`;
+  paginasiUcapan.innerHTML = html;
+}
+
+paginasiUcapan.addEventListener('click', function (e) {
+  const tombol = e.target.closest('button[data-halaman]');
+  if (!tombol || tombol.disabled) return;
+  halamanUcapan = Number(tombol.dataset.halaman);
+  tampilkanUcapan();
+  daftarUcapan.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
 
 
 tombolBuka.addEventListener('click', function () {
@@ -72,6 +104,39 @@ tombolMusik.addEventListener('click', function () {
     tombolMusik.classList.add('paused');
   }
 });
+
+const dropdownJumlah = document.getElementById('dropdown-jumlah');
+const dropdownTombol = dropdownJumlah.querySelector('.dropdown-tombol');
+const dropdownTeks = dropdownJumlah.querySelector('.dropdown-teks');
+const opsiJumlah = dropdownJumlah.querySelectorAll('.dropdown-opsi');
+
+function aturDropdown(buka) {
+  dropdownJumlah.classList.toggle('terbuka', buka);
+  dropdownTombol.setAttribute('aria-expanded', buka);
+}
+
+function pilihJumlah(opsi) {
+  inputJumlah.value = opsi.dataset.nilai;
+  dropdownTeks.textContent = opsi.dataset.nilai;
+  opsiJumlah.forEach(function (o) {
+    o.classList.toggle('aktif', o === opsi);
+    o.setAttribute('aria-selected', o === opsi);
+  });
+  aturDropdown(false);
+}
+
+dropdownTombol.addEventListener('click', () => aturDropdown(!dropdownJumlah.classList.contains('terbuka')));
+opsiJumlah.forEach(function (opsi) {
+  opsi.addEventListener('click', () => pilihJumlah(opsi));
+  opsi.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pilihJumlah(opsi); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); (opsi.nextElementSibling || opsi).focus(); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); (opsi.previousElementSibling || opsi).focus(); }
+  });
+});
+document.addEventListener('click', (e) => { if (!dropdownJumlah.contains(e.target)) aturDropdown(false); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') aturDropdown(false); });
+formulirUcapan.addEventListener('reset', () => setTimeout(() => pilihJumlah(opsiJumlah[0]), 0));
 
 function tampilkanToast(pesan) {
   toastBox.textContent = pesan;
@@ -105,6 +170,7 @@ formulirUcapan.addEventListener('submit', function (e) {
       day: 'numeric', month: 'short', year: 'numeric'
     });
 
+    halamanUcapan = 1;
     dataUcapan.unshift({ nama, pesan, rsvp, jumlah, tanggal: tanggalHariIni });
     localStorage.setItem('ucapanPernikahan', JSON.stringify(dataUcapan));
 
@@ -133,17 +199,45 @@ function jalankanCountdown() {
 }
 
 function jalankanAnimasiMuncul() {
+  const daftar = document.querySelectorAll('.animasi-muncul');
+
+  // jeda bertahap untuk elemen bersaudara (kartu dalam satu grid)
+  daftar.forEach(function (el) {
+    const induk = el.parentElement;
+    if (induk.id === 'konten' || induk.tagName === 'SECTION') return;
+    const saudara = Array.from(induk.children).filter((c) => c.classList.contains('animasi-muncul'));
+    el.style.setProperty('--jeda', Math.min(saudara.indexOf(el), 4) * 0.12 + 's');
+  });
+
+  if (!('IntersectionObserver' in window)) {
+    daftar.forEach((el) => el.classList.add('tampil'));
+    return;
+  }
+
+  // muncul ke atas setiap kali elemen masuk dari bawah layar saat scroll
   const observer = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       if (entry.isIntersecting) {
         entry.target.classList.add('tampil');
-        observer.unobserve(entry.target);
+      } else if (entry.boundingClientRect.top > 0) {
+        entry.target.classList.remove('tampil');
       }
     });
-  }, { threshold: 0.1 });
+  }, { threshold: 0, rootMargin: '0px 0px -8% 0px' });
 
-  document.querySelectorAll('.animasi-muncul').forEach((el) => observer.observe(el));
+  daftar.forEach((el) => observer.observe(el));
 }
+
+const tombolHadiah = document.getElementById('tombol-hadiah');
+const panelHadiah = document.getElementById('panel-hadiah');
+const teksTombolHadiah = document.getElementById('teks-tombol-hadiah');
+
+tombolHadiah.addEventListener('click', function () {
+  const terbuka = panelHadiah.classList.toggle('terbuka');
+  tombolHadiah.classList.toggle('aktif', terbuka);
+  tombolHadiah.setAttribute('aria-expanded', terbuka);
+  teksTombolHadiah.textContent = terbuka ? 'Sembunyikan Rekening' : 'Tampilkan Rekening';
+});
 
 const lightboxModal = document.getElementById('lightbox-modal');
 const lightboxImg = document.getElementById('lightbox-img');
