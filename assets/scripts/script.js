@@ -113,6 +113,9 @@ const opsiJumlah = dropdownJumlah.querySelectorAll('.dropdown-opsi');
 function aturDropdown(buka) {
   dropdownJumlah.classList.toggle('terbuka', buka);
   dropdownTombol.setAttribute('aria-expanded', buka);
+  if (buka) {
+    setTimeout(() => dropdownJumlah.querySelector('.dropdown-daftar').scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 60);
+  }
 }
 
 function pilihJumlah(opsi) {
@@ -232,11 +235,28 @@ const tombolHadiah = document.getElementById('tombol-hadiah');
 const panelHadiah = document.getElementById('panel-hadiah');
 const teksTombolHadiah = document.getElementById('teks-tombol-hadiah');
 
+let timerTutupHadiah;
 tombolHadiah.addEventListener('click', function () {
-  const terbuka = panelHadiah.classList.toggle('terbuka');
-  tombolHadiah.classList.toggle('aktif', terbuka);
-  tombolHadiah.setAttribute('aria-expanded', terbuka);
-  teksTombolHadiah.textContent = terbuka ? 'Sembunyikan Rekening' : 'Tampilkan Rekening';
+  const buka = !panelHadiah.classList.contains('terbuka');
+  clearTimeout(timerTutupHadiah);
+
+  tombolHadiah.classList.toggle('aktif', buka);
+  tombolHadiah.setAttribute('aria-expanded', buka);
+  teksTombolHadiah.textContent = buka ? 'Sembunyikan Rekening' : 'Tampilkan Rekening';
+
+  if (buka) {
+    panelHadiah.hidden = false;
+    panelHadiah.classList.remove('menutup');
+    void panelHadiah.offsetWidth;
+    panelHadiah.classList.add('terbuka');
+  } else {
+    panelHadiah.classList.remove('terbuka');
+    panelHadiah.classList.add('menutup');
+    timerTutupHadiah = setTimeout(function () {
+      panelHadiah.hidden = true;
+      panelHadiah.classList.remove('menutup');
+    }, 350);
+  }
 });
 
 const lightboxModal = document.getElementById('lightbox-modal');
@@ -306,3 +326,29 @@ lightboxModal.addEventListener('touchend', (e) => {
 
 jalankanCountdown();
 tampilkanUcapan();
+
+// Efek "hover" di layar sentuh: kelas .sentuh ditambahkan saat elemen disentuh
+const TARGET_SENTUH = '.acara-card, .profil-mempelai-card, .timeline-item, .amplop-card, .radio-card, .galeri-item, .ig-mempelai, .tombol, .tombol-salin, .paginasi button';
+let elemenSentuh = null;
+let timerSentuh;
+
+function lepasSentuh(segera) {
+  const el = elemenSentuh;
+  elemenSentuh = null;
+  if (!el) return;
+  clearTimeout(timerSentuh);
+  if (segera) el.classList.remove('sentuh');
+  else timerSentuh = setTimeout(() => el.classList.remove('sentuh'), 450);
+}
+
+document.addEventListener('touchstart', function (e) {
+  const el = e.target.closest(TARGET_SENTUH);
+  if (!el) return;
+  lepasSentuh(true);
+  elemenSentuh = el;
+  el.classList.add('sentuh');
+}, { passive: true });
+
+document.addEventListener('touchmove', () => lepasSentuh(true), { passive: true });
+document.addEventListener('touchend', () => lepasSentuh(false), { passive: true });
+document.addEventListener('touchcancel', () => lepasSentuh(true), { passive: true });
