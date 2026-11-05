@@ -1,4 +1,4 @@
-/* Dashboard - mengikuti gaya index.html (wallpaper blur + kaca transparan) */
+/* Dashboard Style - Earthy Glassmorphism All-in-One */
 :root {
     --c-mustard: #E9C46A;
     --c-granite: #4E6151;
@@ -7,20 +7,17 @@
     --c-dark: #1C1C1E;
     --font-bold: 'Plus Jakarta Sans', sans-serif;
     --font-script: 'Great Vibes', cursive;
-
     --glass-bg: rgba(28, 28, 30, 0.38);
-    --glass-item: rgba(255, 255, 255, 0.1);
-    --glass-border: rgba(233, 196, 106, 0.3);
-    --glass-blur: blur(16px);
     --shadow-glass: 0 10px 30px rgba(0, 0, 0, 0.25);
+    --grad-terang: linear-gradient(145deg, rgba(255, 255, 255, 0.65) 0%, rgba(246, 248, 230, 0.55) 45%, rgba(211, 227, 176, 0.45) 100%);
+    --blur-terang: blur(14px) saturate(1.2);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-button, a, label { -webkit-tap-highlight-color: transparent; }
 
 body {
     font-family: var(--font-bold);
-    color: #fff;
+    color: var(--c-dark);
     min-height: 100vh;
     background-color: var(--c-granite);
 }
@@ -29,54 +26,39 @@ body {
     position: fixed;
     inset: -40px;
     z-index: 0;
-    background:
-        linear-gradient(180deg, rgba(28, 28, 30, 0.32) 0%, rgba(78, 97, 81, 0.6) 100%),
-        url("../images/1.jpg") center / cover no-repeat;
+    background: linear-gradient(180deg, rgba(28, 28, 30, 0.35) 0%, rgba(78, 97, 81, 0.65) 100%), url("../images/1.jpg") center / cover no-repeat;
     background-color: var(--c-granite);
 }
-.latar-wallpaper::before { content: ""; position: absolute; inset: 0; background: inherit; filter: blur(9px); }
-
-.hidden { display: none !important; }
 
 .dashboard-wrapper {
     position: relative;
     z-index: 1;
     display: flex;
     justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    min-height: 100dvh;
-    padding: 20px;
-}
-
-.kaca, .dashboard-container, .login-card, .hero-section, .menu-card, .ucapan-card {
-    background: var(--glass-bg);
-    -webkit-backdrop-filter: var(--glass-blur);
-    backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--glass-border);
+    padding: 30px 15px;
 }
 
 .dashboard-container {
     width: 100%;
-    max-width: 620px;
-    border-radius: 28px;
-    box-shadow: var(--shadow-glass);
-    overflow: hidden;
-    padding: 30px;
+    max-width: 850px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-/* Perpindahan halaman: muncul ke atas */
-#loginSection:not(.hidden), #dashboardSection:not(.hidden), .page-section:not(.hidden) {
-    animation: munculKeAtas 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-}
-@keyframes munculKeAtas {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+.kaca {
+    background: var(--grad-terang);
+    -webkit-backdrop-filter: var(--blur-terang);
+    backdrop-filter: var(--blur-terang);
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    border-radius: 24px;
+    box-shadow: var(--shadow-glass);
+    padding: 24px;
 }
 
 .badge-wedding {
     display: inline-block;
-    background: rgba(233, 196, 106, 0.88);
+    background: rgba(233, 196, 106, 0.92);
     color: var(--c-dark);
     padding: 0.35rem 1.1rem;
     border-radius: 50px;
@@ -84,213 +66,78 @@ body {
     font-weight: 700;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
 }
 
 .nama-script {
     font-family: var(--font-script);
-    font-size: clamp(2.6rem, 11vw, 3.6rem);
+    font-size: clamp(2.6rem, 10vw, 3.6rem);
     line-height: 1.1;
-    color: var(--c-beige);
-    text-shadow: 0 3px 14px rgba(0, 0, 0, 0.4);
-    margin: 0.5rem 0;
+    color: var(--c-granite);
+    margin: 0.4rem 0;
 }
-.nama-script .ampersand { color: var(--c-mustard); font-size: 0.8em; }
+.nama-script .ampersand { color: var(--c-mustard); }
 
-.dashboard-header { text-align: center; }
+.dashboard-header { text-align: center; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.4); }
+.welcome-text { font-size: 0.9rem; color: var(--c-tea); }
 
-.header-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-align: center;
-    color: var(--c-mustard);
-    margin-bottom: 15px;
-}
+.login-card { max-width: 420px; margin: 60px auto; text-align: center; }
+.login-card h2 { font-size: 0.85rem; letter-spacing: 0.16em; color: #5a6a5c; margin-bottom: 20px; }
 
-.login-card { background: rgba(28, 28, 30, 0.3); border-radius: 24px; padding: 35px 25px; text-align: center; }
-.login-card h2 {
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    color: var(--c-tea);
-    margin-bottom: 25px;
-}
-
-.input-field { margin-bottom: 1.2rem; text-align: left; }
-.input-field input[type="text"], .input-field input[type="password"] {
-    color: #fff !important;
-    background-color: rgba(255, 255, 255, 0.12) !important;
-    border-bottom: 1.5px solid rgba(233, 196, 106, 0.5) !important;
-    border-radius: 10px 10px 0 0;
-    padding-left: 10px !important;
-    box-shadow: none !important;
-    transition: background 0.25s ease, border-color 0.25s ease;
-}
-.input-field input:focus { border-bottom: 1.5px solid var(--c-mustard) !important; background-color: rgba(255, 255, 255, 0.18) !important; }
-.input-field label { color: rgba(255, 255, 255, 0.7) !important; padding-left: 10px; }
-.input-field label.active, .input-field input:focus + label { color: var(--c-mustard) !important; padding-left: 0; }
-
-.btn-login, .btn-bottom-action {
-    background-color: rgba(233, 196, 106, 0.92) !important;
-    color: var(--c-dark) !important;
-    width: 100%;
-    border-radius: 50px !important;
-    height: 45px !important;
-    line-height: 45px !important;
-    font-weight: 700;
-    box-shadow: 0 6px 18px rgba(233, 196, 106, 0.35) !important;
-    transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-}
-.btn-bottom-action { margin-top: 20px; }
-.btn-login:hover, .btn-bottom-action:hover {
-    background-color: #f0cf78 !important;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 24px rgba(233, 196, 106, 0.5) !important;
-}
-
-.welcome-text { text-align: center; font-size: 0.85rem; font-weight: 700; color: var(--c-tea); margin-bottom: 15px; }
-
-.hero-section { width: 100%; height: 180px; border-radius: 20px; overflow: hidden; margin-bottom: 20px; padding: 4px; }
-.hero-section img { width: 100%; height: 100%; object-fit: cover; border-radius: 16px; transition: transform 0.6s ease; }
-.hero-section:hover img { transform: scale(1.05); }
-
-.menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
-
-.menu-card {
-    background: var(--glass-item);
-    border-radius: 20px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
-}
-.menu-card:hover { transform: translateY(-6px); border-color: rgba(233, 196, 106, 0.8); box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35); }
-.menu-card i { font-size: 2.2rem; color: var(--c-mustard); margin-bottom: 8px; transition: transform 0.4s ease; }
-.menu-card:hover i { transform: scale(1.2) rotate(-6deg); }
-.menu-text { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; color: #fff; text-align: center; }
-
-.btn-logout {
-    background-color: transparent !important;
-    border: 1.5px solid var(--c-mustard) !important;
-    color: var(--c-mustard) !important;
-    box-shadow: none !important;
-    width: 100%;
-    border-radius: 50px !important;
-    height: 45px !important;
-    margin-top: 25px;
-    font-weight: 700;
-    transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
-}
-.btn-logout:hover { background-color: var(--c-mustard) !important; color: var(--c-dark) !important; transform: translateY(-2px); }
-
-.form-content { display: flex; flex-direction: column; gap: 10px; }
-.input-group-label { font-size: 0.82rem; font-weight: 700; color: var(--c-mustard); margin-top: 10px; }
-
+.input-group { margin-bottom: 14px; text-align: left; }
+.input-group label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--c-granite); margin-bottom: 6px; }
 .custom-input {
-    width: 100% !important;
-    color: #fff !important;
-    background-color: rgba(255, 255, 255, 0.12) !important;
-    border: 1.5px solid rgba(255, 255, 255, 0.28) !important;
-    border-radius: 14px !important;
-    padding: 0 15px !important;
-    height: 42px !important;
-    box-sizing: border-box !important;
-    font-size: 16px !important;
-    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    width: 100%; height: 42px; padding: 0 16px; border-radius: 12px;
+    border: 1.5px solid rgba(78, 97, 81, 0.3); background: rgba(255, 255, 255, 0.85);
+    font-family: var(--font-bold); font-size: 0.85rem; color: var(--c-dark); outline: none;
 }
-.custom-input::placeholder { color: rgba(255, 255, 255, 0.6); }
-.custom-input:focus { border-color: var(--c-mustard) !important; box-shadow: 0 0 0 3px rgba(233, 196, 106, 0.25) !important; }
+.custom-input:focus { border-color: var(--c-granite); background: #fff; }
 
-.file-upload-box {
-    position: relative;
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 2px dashed rgba(233, 196, 106, 0.7);
-    border-radius: 14px;
-    height: 42px;
-    display: flex;
-    align-items: center;
-    padding: 0 15px;
-    cursor: pointer;
-    transition: background 0.25s ease, transform 0.25s ease;
+.tombol-aksi {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; height: 44px; border: none; border-radius: 50px;
+    background: var(--c-mustard); color: var(--c-dark); font-family: var(--font-bold);
+    font-size: 0.85rem; font-weight: 700; cursor: pointer; text-decoration: none;
 }
-.file-upload-box:hover { background-color: rgba(233, 196, 106, 0.18); transform: translateY(-2px); }
-.file-label { font-size: 0.82rem; color: rgba(255, 255, 255, 0.75); }
-.file-upload-box input[type="file"] { position: absolute; top: 0; left: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+.tombol-aksi.wa { background: #25D366; color: #fff; }
+.tombol-aksi.btn-logout { background: transparent; border: 1.5px solid var(--c-mustard); color: var(--c-mustard); margin-top: 10px; }
 
-.ucapan-card { background: var(--glass-item); border-radius: 16px; padding: 15px; margin-bottom: 10px; }
-.ucapan-sender { font-weight: 700; font-size: 0.85rem; color: var(--c-mustard); }
-.badge-rsvp { font-size: 0.7rem; background: var(--c-tea); color: var(--c-dark); padding: 0.2rem 0.5rem; border-radius: 50px; margin-left: 5px; }
-.ucapan-text { font-size: 0.82rem; color: rgba(255, 255, 255, 0.85); margin-top: 5px; }
+.pesan-form { padding: 10px 14px; border-radius: 12px; font-size: 0.82rem; font-weight: 700; text-align: center; margin-bottom: 15px; }
+.pesan-form.galat { background: rgba(255, 255, 255, 0.85); color: #a33a3a; border: 1px solid rgba(163, 58, 58, 0.4); }
+.pesan-form.sukses { background: rgba(255, 255, 255, 0.85); color: var(--c-granite); border: 1px solid rgba(78, 97, 81, 0.4); }
 
-/* ===== Revisi: kartu terang gradien (sama seperti index) ===== */
-:root { --grad-terang: linear-gradient(145deg, rgba(255, 255, 255, 0.58) 0%, rgba(246, 248, 230, 0.48) 45%, rgba(211, 227, 176, 0.38) 100%);
-    --blur-terang: blur(14px) saturate(1.2); }
+.block-title { font-size: 1rem; font-weight: 700; color: var(--c-granite); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
 
-.dashboard-container { background: none; -webkit-backdrop-filter: none; backdrop-filter: none; border: none; box-shadow: none; overflow: visible; }
-.kaca, .login-card, .hero-section, .menu-card, .form-content {
-    background: var(--grad-terang);
-    -webkit-backdrop-filter: var(--blur-terang);
-    backdrop-filter: var(--blur-terang);
-    border: 1px solid rgba(255, 255, 255, 0.7);
-    box-shadow: var(--shadow-glass);
+.statistik-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+.statistik-kartu {
+    background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(78, 97, 81, 0.15);
+    padding: 14px 10px; border-radius: 16px; text-align: center;
 }
-.form-content { padding: 1.4rem 1.2rem; border-radius: 24px; }
-.header-title { text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4); }
+.statistik-kartu.sorot { background: rgba(233, 196, 106, 0.65); border-color: var(--c-mustard); }
+.statistik-angka { display: block; font-size: 1.8rem; font-weight: 800; color: var(--c-granite); }
+.statistik-label { font-size: 0.72rem; font-weight: 700; color: #4b5146; }
 
-.login-card .nama-script { color: var(--c-granite); text-shadow: none; }
-.login-card h2 { color: #5a6a5c; }
-.input-field input[type="text"], .input-field input[type="password"] {
-    color: var(--c-dark) !important;
-    background-color: rgba(255, 255, 255, 0.75) !important;
-    border-bottom: 1.5px solid rgba(78, 97, 81, 0.4) !important;
+.baris-tombol { display: flex; gap: 10px; margin-top: 10px; }
+.baris-tombol .tombol-aksi { flex: 1; }
+.hidden { display: none !important; }
+
+.tabel-bungkus { overflow-x: auto; border-radius: 14px; border: 1px solid rgba(78, 97, 81, 0.15); background: rgba(255, 255, 255, 0.75); }
+.tabel-rsvp { width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: left; }
+.tabel-rsvp th, .tabel-rsvp td { padding: 10px 12px; border-bottom: 1px solid rgba(78, 97, 81, 0.12); vertical-align: top; }
+.tabel-rsvp th { background: rgba(78, 97, 81, 0.1); color: var(--c-granite); font-size: 0.72rem; text-transform: uppercase; }
+.baris-sembunyi { opacity: 0.55; background: rgba(235, 235, 235, 0.5); }
+.teks-pesan { max-width: 260px; word-break: break-word; }
+
+.badge-status { display: inline-block; padding: 2px 8px; border-radius: 50px; font-size: 0.68rem; font-weight: 700; color: #fff; background: var(--c-granite); }
+.badge-status.hijau { background: #4E6151; }
+.badge-status.merah { background: #a33a3a; }
+.badge-status.kuning { background: #d4a373; }
+.badge-status.abu { background: #7a857c; }
+
+.kolom-aksi { display: flex; gap: 6px; flex-wrap: wrap; }
+.tombol-kecil {
+    padding: 4px 10px; border-radius: 50px; border: 1px solid var(--c-granite);
+    background: #fff; color: var(--c-granite); font-family: var(--font-bold);
+    font-size: 0.72rem; font-weight: 700; cursor: pointer;
 }
-.input-field input:focus { border-bottom: 1.5px solid var(--c-granite) !important; background-color: #fff !important; }
-.input-field label { color: #5a6a5c !important; }
-.input-field label.active, .input-field input:focus + label { color: var(--c-granite) !important; }
-
-.menu-text { color: #2e322a; }
-.menu-card i { color: var(--c-granite); }
-
-.input-group-label { color: var(--c-granite); }
-.custom-input { color: var(--c-dark) !important; background-color: rgba(255, 255, 255, 0.75) !important; border: 1.5px solid rgba(78, 97, 81, 0.25) !important; }
-.custom-input::placeholder { color: #7a857c; }
-.custom-input:focus { border-color: var(--c-granite) !important; }
-.file-upload-box { background-color: rgba(255, 255, 255, 0.6); border-color: rgba(78, 97, 81, 0.5); }
-.file-upload-box:hover { background-color: rgba(233, 196, 106, 0.3); }
-.file-label { color: #4b5146; }
-
-.ucapan-card { background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(78, 97, 81, 0.15); box-shadow: none; }
-.ucapan-sender { color: var(--c-granite); }
-.ucapan-text { color: #4b5146; }
-.badge-rsvp { background: var(--c-mustard); }
-
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .latar-wallpaper { background-color: var(--c-granite); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
-}
-
-@media (max-width: 480px) {
-    .dashboard-container { padding: 22px 18px; border-radius: 24px; }
-    .menu-grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .kaca, .login-card, .hero-section, .menu-card, .form-content { background: linear-gradient(145deg, #ffffff 0%, #f6f8e6 45%, #d3e3b0 100%); }
-}
-
-/* Panel pembungkus harus transparan (kelas .kaca tidak boleh berlaku di sini) */
-.dashboard-container.kaca {
-    background: none;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-    border: none;
-    box-shadow: none;
-}
-.welcome-text { text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45); }
+.tombol-kecil.bahaya { border-color: #a33a3a; color: #a33a3a; }
+.teks-kosong { text-align: center; font-size: 0.85rem; color: #5a6a5c; padding: 20px 0; }

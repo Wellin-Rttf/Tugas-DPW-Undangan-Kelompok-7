@@ -1,6 +1,6 @@
 # Undangan Pernikahan Digital
 
-Website undangan pernikahan digital satu halaman dengan gaya *glassmorphism*. Halaman utama berisi cover, *countdown*, profil mempelai, acara, galeri, perjalanan kisah, hadiah digital, dan *form* konfirmasi kehadiran beserta ucapan. Tersedia juga halaman *dashboard* admin sederhana untuk melihat daftar ucapan.
+Website undangan pernikahan digital satu halaman dengan gaya *glassmorphism*. Halaman utama berisi cover, *countdown*, profil mempelai, acara, galeri, perjalanan kisah, hadiah digital, dan *form* konfirmasi kehadiran beserta ucapan. Tersedia juga halaman *dashboard* admin untuk melakukan administrasi terkait halaman undangan.
 
 ## Tugas Kelompok 7
 
@@ -25,3 +25,9 @@ Website undangan pernikahan digital satu halaman dengan gaya *glassmorphism*. Ha
 - Form RSVP dan ucapan (tersimpan di LocalStorage browser)
 - Tampilan responsif untuk PC dan HP
 - Dashboard admin untuk melihat ucapan tamu
+
+## Catatan
+
+Akun admin *default*:
+   - **Username:** `admin`
+   - **Password:** `admin123`

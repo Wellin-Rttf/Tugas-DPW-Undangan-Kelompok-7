@@ -11,13 +11,8 @@ const tombolMusik = document.getElementById('tombol-musik');
 const toastBox = document.getElementById('toast-box');
 const tombolSaveDate = document.getElementById('tombol-save-date');
 
-let dataUcapan = [];
-
-try {
-  dataUcapan = JSON.parse(localStorage.getItem('ucapanPernikahan')) || [];
-} catch (e) {
-  dataUcapan = [];
-}
+// Data ucapan dikirim dari index.php (database)
+let dataUcapan = Array.isArray(window.DATA_UCAPAN) ? window.DATA_UCAPAN : [];
 
 function bersihkanTeks(teks) {
   const el = document.createElement('div');
@@ -160,27 +155,30 @@ tombolSaveDate.addEventListener('click', function () {
   tampilkanToast('Membuka Kalender Google...');
 });
 
-formulirUcapan.addEventListener('submit', function (e) {
+formulirUcapan.addEventListener('submit', async function (e) {
   e.preventDefault();
 
-  const nama = inputNama.value.trim();
-  const pesan = inputPesan.value.trim();
-  const jumlah = inputJumlah.value;
-  const rsvp = document.querySelector('input[name="rsvp"]:checked').value;
+  const tombolKirim = formulirUcapan.querySelector('button[type="submit"]');
+  tombolKirim.disabled = true;
 
-  if (nama !== '' && pesan !== '') {
-    const tanggalHariIni = new Date().toLocaleDateString('id-ID', {
-      day: 'numeric', month: 'short', year: 'numeric'
-    });
+  try {
+    const respons = await fetch(formulirUcapan.action, { method: 'POST', body: new FormData(formulirUcapan) });
+    const hasil = await respons.json();
 
-    halamanUcapan = 1;
-    dataUcapan.unshift({ nama, pesan, rsvp, jumlah, tanggal: tanggalHariIni });
-    localStorage.setItem('ucapanPernikahan', JSON.stringify(dataUcapan));
-
-    tampilkanUcapan();
-    formulirUcapan.reset();
-    tampilkanToast('Konfirmasi & ucapan Anda berhasil dikirim!');
+    if (hasil.ok) {
+      if (hasil.ucapan) {
+        halamanUcapan = 1;
+        dataUcapan.unshift(hasil.ucapan);
+        tampilkanUcapan();
+      }
+      formulirUcapan.reset();
+    }
+    tampilkanToast(hasil.pesan);
+  } catch (err) {
+    tampilkanToast('Gagal mengirim. Periksa koneksi internet lalu coba lagi.');
   }
+
+  tombolKirim.disabled = false;
 });
 
 function jalankanCountdown() {

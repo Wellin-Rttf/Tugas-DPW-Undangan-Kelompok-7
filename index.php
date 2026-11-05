@@ -1,3 +1,67 @@
+<?php
+require_once __DIR__ . '/koneksi.php';
+
+$pesanStatus = '';
+$statusSukses = false;
+
+// ---------- PENANGANAN FORM RSVP (POST) ----------
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nama   = trim($_POST['nama'] ?? '');
+    $pesan  = trim($_POST['pesan'] ?? '');
+    $rsvp   = $_POST['rsvp'] ?? '';
+    $jumlah = PILIHAN_JUMLAH[$_POST['jumlah'] ?? ''] ?? 0;
+    $bot    = $_POST['website'] ?? ''; // Honeypot anti-bot
+
+    if (!empty($bot)) {
+        $pesanStatus = 'Terima kasih ucapan Anda telah terkirim!';
+        $statusSukses = true;
+    } elseif (isset($_SESSION['ucapan_terakhir']) && time() - $_SESSION['ucapan_terakhir'] < 10) {
+        $pesanStatus = 'Mohon tunggu beberapa detik sebelum mengirim ucapan lagi.';
+    } elseif ($nama === '' || $pesan === '') {
+        $pesanStatus = 'Nama dan pesan wajib diisi.';
+    } elseif (strlen($nama) > 100 || strlen($pesan) > 1000) {
+        $pesanStatus = 'Nama maksimal 100 karakter dan pesan maksimal 1000 karakter.';
+    } elseif (!in_array($rsvp, PILIHAN_RSVP, true) || $jumlah === 0) {
+        $pesanStatus = 'Pilihan kehadiran tidak valid.';
+    } elseif (!$koneksi) {
+        $pesanStatus = 'Koneksi server bermasalah, silakan coba lagi nanti.';
+    } else {
+        $waktu = date('Y-m-d H:i:s');
+        $stmt = $koneksi->prepare('INSERT INTO tb_ucapan (nama, rsvp, jumlah_tamu, pesan, created_at) VALUES (?, ?, ?, ?, ?)');
+        $stmt->bind_param('ssiss', $nama, $rsvp, $jumlah, $pesan, $waktu);
+        $stmt->execute();
+
+        $_SESSION['ucapan_terakhir'] = time();
+        $pesanStatus = 'Konfirmasi & ucapan Anda berhasil dikirim!';
+        $statusSukses = true;
+    }
+}
+
+// ---------- BACA PARAMETER TAMU ----------
+$namaTamu = $_GET['to'] ?? '';
+$namaTamu = is_string($namaTamu) ? strip_tags($namaTamu) : '';
+$namaTamu = trim((string) preg_replace('/[\p{C}\s]+/u', ' ', $namaTamu));
+$namaTamu = potong_teks($namaTamu, 60);
+$adaNamaTamu = $namaTamu !== '';
+if (!$adaNamaTamu) {
+    $namaTamu = 'Tamu Undangan';
+}
+
+// ---------- BACA DATA UCAPAN PUBLIK ----------
+$dataUcapan = [];
+if ($koneksi) {
+    $hasil = $koneksi->query('SELECT nama, rsvp, jumlah_tamu, pesan, created_at FROM tb_ucapan WHERE tampil = 1 ORDER BY created_at DESC, id DESC LIMIT 500');
+    while ($u = $hasil->fetch_assoc()) {
+        $dataUcapan[] = [
+            'nama'    => $u['nama'],
+            'pesan'   => $u['pesan'],
+            'rsvp'    => $u['rsvp'],
+            'jumlah'  => label_jumlah($u['jumlah_tamu']),
+            'tanggal' => tanggal_indo($u['created_at']),
+        ];
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -9,10 +73,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
-  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
   
+  <script>window.DATA_UCAPAN = <?= json_encode($dataUcapan, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
   <script src="assets/scripts/script.js" defer></script>
 </head>
 <body class="kunci-scroll">
@@ -21,7 +85,7 @@
 
   <audio id="musik-latar" loop preload="none">
     <source src="assets/music/SomethingGreaterInterlude.m4a" type="audio/mp4">
-    Browser kamu tidak mendukung elemen audio. 
+    Browser Anda tidak mendukung elemen audio. 
   </audio>
   
   <button id="tombol-musik" class="tombol-musik hidden" aria-label="Toggle Musik">
@@ -39,7 +103,7 @@
       <div class="sampul-bawah">
         <div class="kartu-tamu-sampul">
           <p class="kepada-label">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
-          <h2 class="tamu-sampul">TAMU UNDANGAN</h2>
+          <h2 class="tamu-sampul"><?= h($namaTamu) ?></h2>
           <p class="catatan-sampul">Tanpa Mengurangi Rasa Hormat, Kami Mengundang Anda Untuk Hadir</p>
           <button class="tombol tombol-buka-mewah" id="tombol-buka">
             <i class="fa-solid fa-envelope-open-text"></i> Buka Undangan
@@ -82,27 +146,27 @@
 
       <section class="bagian">
         <div class="countdown-card animasi-muncul">
-        <h2 class="judul-bagian">Hitung Mundur Hari Bahagia</h2>
-        <p class="subjudul-bagian">Menghitung hari menuju momen bahagia kami</p>
-        
-        <div class="countdown-grid" id="countdown">
-          <div class="countdown-item">
-            <span id="cd-hari">00</span>
-            <small>Hari</small>
+          <h2 class="judul-bagian">Hitung Mundur Hari Bahagia</h2>
+          <p class="subjudul-bagian">Menghitung hari menuju momen bahagia kami</p>
+          
+          <div class="countdown-grid" id="countdown">
+            <div class="countdown-item">
+              <span id="cd-hari">00</span>
+              <small>Hari</small>
+            </div>
+            <div class="countdown-item">
+              <span id="cd-jam">00</span>
+              <small>Jam</small>
+            </div>
+            <div class="countdown-item">
+              <span id="cd-menit">00</span>
+              <small>Menit</small>
+            </div>
+            <div class="countdown-item">
+              <span id="cd-detik">00</span>
+              <small>Detik</small>
+            </div>
           </div>
-          <div class="countdown-item">
-            <span id="cd-jam">00</span>
-            <small>Jam</small>
-          </div>
-          <div class="countdown-item">
-            <span id="cd-menit">00</span>
-            <small>Menit</small>
-          </div>
-          <div class="countdown-item">
-            <span id="cd-detik">00</span>
-            <small>Detik</small>
-          </div>
-        </div>
         </div>
       </section>
 
@@ -278,12 +342,15 @@
         <h2 class="judul-bagian animasi-muncul">Konfirmasi &amp; Ucapan</h2>
         <p class="pengantar-ucapan subjudul-bagian animasi-muncul">Konfirmasi kehadiran Anda &amp; berikan ucapan hangat untuk kedua mempelai</p>
 
-        <div id="pesan-status" class="pemberitahuan" style="display: none;"></div>
+        <?php if ($pesanStatus !== ''): ?>
+          <div class="pemberitahuan <?= $statusSukses ? 'sukses' : 'galat' ?>"><?= h($pesanStatus) ?></div>
+        <?php endif; ?>
 
-        <form id="formulir-ucapan" class="formulir-ucapan kaca animasi-muncul">
+        <form id="formulir-ucapan" class="formulir-ucapan kaca animasi-muncul" action="index.php?to=<?= urlencode($namaTamu) ?>#formulir-ucapan" method="post">
+          <input type="text" name="website" class="jebakan" tabindex="-1" autocomplete="off" aria-hidden="true">
           <div class="baris-input">
             <label for="input-nama">Nama Lengkap</label>
-            <input type="text" id="input-nama" placeholder="Masukkan nama Anda..." required>
+            <input type="text" id="input-nama" name="nama" maxlength="100" placeholder="Masukkan nama Anda..." value="<?= $adaNamaTamu ? h($namaTamu) : '' ?>" required>
           </div>
 
           <div class="baris-input">
@@ -307,7 +374,7 @@
           <div class="baris-input">
             <label id="label-jumlah">Jumlah Tamu Hadir</label>
             <div class="dropdown" id="dropdown-jumlah">
-              <input type="hidden" id="input-jumlah" value="1 Orang">
+              <input type="hidden" id="input-jumlah" name="jumlah" value="1 Orang">
               <button type="button" class="dropdown-tombol" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="label-jumlah">
                 <span class="dropdown-teks">1 Orang</span>
                 <i class="fa-solid fa-chevron-down"></i>
@@ -322,7 +389,7 @@
 
           <div class="baris-input">
             <label for="input-pesan">Pesan &amp; Doa Restu</label>
-            <textarea id="input-pesan" rows="4" placeholder="Tuliskan pesan & doa terbaik Anda..." required></textarea>
+            <textarea id="input-pesan" name="pesan" maxlength="1000" rows="4" placeholder="Tuliskan pesan & doa terbaik Anda..." required></textarea>
           </div>
 
           <button type="submit" class="tombol tombol-isi-mewah">

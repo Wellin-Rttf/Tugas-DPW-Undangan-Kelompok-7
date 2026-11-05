@@ -916,14 +916,13 @@ button, input, textarea, select { font-family: var(--font-bold); color: inherit;
 .tombol-toggle { margin: 0 auto; }
 .tombol-toggle .ikon-panah { transition: transform 0.4s ease; }
 .tombol-toggle.aktif .ikon-panah { transform: rotate(180deg); }
-.panel-hadiah {
-  display: grid;
-  grid-template-rows: 0fr;
-  visibility: hidden;
-  transition: grid-template-rows 0.5s ease, margin-top 0.5s ease, visibility 0s linear 0.5s;
-}
-.panel-hadiah.terbuka { grid-template-rows: 1fr; visibility: visible; margin-top: 1.4rem; transition-delay: 0s; }
-.panel-hadiah-isi { overflow: hidden; min-height: 0; margin: 0 -0.8rem; padding: 0.6rem 0.8rem 1.8rem; }
+.panel-hadiah { display: block; margin-top: 0; }
+.panel-hadiah[hidden] { display: none !important; }
+.panel-hadiah.terbuka { margin-top: 1.4rem; animation: bukaPanel 0.45s ease both; }
+.panel-hadiah.menutup { margin-top: 1.4rem; animation: tutupPanel 0.35s ease both; }
+.panel-hadiah-isi { margin: 0; padding: 0.4rem 0 1.4rem; }
+@keyframes bukaPanel { from { opacity: 0; transform: translateY(-14px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes tutupPanel { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-14px); } }
 .amplop-card { box-shadow: 0 6px 16px rgba(42, 54, 44, 0.18); }
 .amplop-card { transition: transform 0.3s ease, border-color 0.3s ease; }
 .amplop-card:hover { transform: translateY(-4px); border-color: rgba(233, 196, 106, 0.8); }
@@ -952,3 +951,72 @@ button, input, textarea, select { font-family: var(--font-bold); color: inherit;
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .kaca, .countdown-card { background: linear-gradient(145deg, #ffffff 0%, #f6f8e6 45%, #d3e3b0 100%); }
 }
+
+
+/* ============ REVISI HP ============ */
+
+/* Teks tidak diperbesar otomatis oleh browser HP */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+/* Kartu kaca: nilai ditulis langsung (tanpa var() pada backdrop-filter) + warna dasar cadangan */
+.kaca, .countdown-card {
+  background-color: rgba(246, 248, 230, 0.3);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+}
+.countdown-card {
+  background-image: linear-gradient(145deg, rgba(255, 255, 255, 0.58) 0%, rgba(246, 248, 230, 0.48) 45%, rgba(211, 227, 176, 0.38) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* Tombol sama seperti desktop (tidak melebar penuh di HP) */
+@media (max-width: 480px) {
+  .tombol-std { width: auto; max-width: 100%; font-size: 0.84rem; }
+}
+
+/* Dropdown jumlah tamu: selalu di atas kartu lain & bisa disentuh */
+.formulir-ucapan { position: relative; z-index: 20; }
+.dropdown { position: relative; z-index: 40; }
+.dropdown-tombol, .dropdown-opsi { touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+.dropdown-opsi { min-height: 44px; display: flex; align-items: center; }
+
+/* Penutup: font & ukuran sama dengan desktop */
+.penutup-nama {
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: 3rem;
+  line-height: 1.2;
+  color: var(--c-mustard);
+}
+.penutup-nama .ampersand { font-family: inherit; font-weight: 400; }
+
+/* Efek "hover" untuk layar sentuh: dipicu saat disentuh (kelas .sentuh dari script) */
+.acara-card.sentuh, .profil-mempelai-card.sentuh {
+  transform: translateY(-8px);
+  border-color: rgba(233, 196, 106, 0.8);
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.35);
+}
+.acara-card.sentuh .icon-acara { transform: scale(1.22) rotate(-6deg); }
+.profil-mempelai-card.sentuh img { transform: scale(1.07); }
+.profil-mempelai-card.sentuh .badge-peran { transform: translateY(-4px); }
+.ig-mempelai.sentuh { transform: translateX(4px); }
+.timeline-item.sentuh .timeline-content { transform: translateY(-6px); border-color: rgba(233, 196, 106, 0.85); box-shadow: 0 16px 34px rgba(0, 0, 0, 0.3); }
+.timeline-item.sentuh .timeline-dot { transform: scale(1.25) rotate(-8deg); background: #f0cf78; }
+.timeline-item.sentuh .timeline-dot i { transform: scale(1.15); }
+.radio-card.sentuh span { transform: translateY(-3px); border-color: var(--c-mustard); background: rgba(233, 196, 106, 0.3); color: var(--c-granite); box-shadow: 0 8px 16px rgba(78, 97, 81, 0.2); }
+.radio-card.sentuh span i { transform: scale(1.25); }
+.amplop-card.sentuh { transform: translateY(-4px); border-color: rgba(233, 196, 106, 0.8); }
+.galeri-item.sentuh img { transform: scale(1.06); }
+.galeri-item.sentuh .overlay-zoom { opacity: 1; }
+.tombol-buka-mewah.sentuh, .tombol-outline.sentuh, .tombol-std.sentuh { transform: translateY(-2px); }
+.tombol-outline.sentuh { background: var(--c-granite); color: var(--c-white); }
+.tombol-isi-mewah.sentuh { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(233, 196, 106, 0.5); }
+.tombol-isi-mewah.sentuh i { transform: translate(5px, -4px) rotate(8deg); }
+.tombol-salin.sentuh { background: var(--c-mustard); }
+.paginasi button.sentuh:not(:disabled) { transform: translateY(-2px); background: rgba(233, 196, 106, 0.4); border-color: var(--c-mustard); }
+
+/* Kolom jebakan bot (tidak terlihat manusia) */
+.jebakan { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
