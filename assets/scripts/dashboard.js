@@ -1,7 +1,6 @@
 const csrf = document.body.dataset.csrf || '';
 const urlUndangan = document.body.dataset.urlUndangan || '';
 
-// ---------- Bantuan umum ----------
 function tampilkanToast(pesan) {
     if (typeof M !== 'undefined' && M.toast) {
         M.toast({ html: pesan, displayLength: 2500 });
@@ -19,12 +18,10 @@ function showSection(sectionId) {
     if (!target) return;
     target.classList.remove('hidden');
 
-    // hash dipakai supaya halaman yang sama terbuka lagi setelah muat ulang
     history.replaceState(null, '', sectionId === 'dashboardSection' ? location.pathname : '#' + sectionId);
     window.scrollTo(0, 0);
 }
 
-// Muat ulang halaman (agar angka & daftar terbaru), lalu tampilkan toast
 function muatUlang(pesan) {
     sessionStorage.setItem('toastDashboard', pesan);
     location.reload();
@@ -44,7 +41,6 @@ async function kirimAksi(data) {
     }
 }
 
-// ---------- Navigasi menu ----------
 document.addEventListener('click', function (e) {
     const pemicu = e.target.closest('[data-buka]');
     if (!pemicu) return;
@@ -52,7 +48,6 @@ document.addEventListener('click', function (e) {
     showSection(pemicu.dataset.buka);
 });
 
-// ---------- Kelola ucapan: sembunyikan / hapus ----------
 document.addEventListener('click', async function (e) {
     const tombol = e.target.closest('[data-aksi]');
     if (!tombol) return;
@@ -70,7 +65,6 @@ document.addEventListener('click', async function (e) {
     }
 });
 
-// ---------- Rekap RSVP: filter ----------
 const tombolFilter = document.querySelectorAll('.chip-filter');
 tombolFilter.forEach(function (tombol) {
     tombol.addEventListener('click', function () {
@@ -87,7 +81,6 @@ tombolFilter.forEach(function (tombol) {
     });
 });
 
-// ---------- Generator link undangan ----------
 const formGenerator = document.getElementById('formGenerator');
 if (formGenerator) {
     const inputNamaTamu = document.getElementById('inputNamaTamu');
@@ -100,7 +93,6 @@ if (formGenerator) {
         const nama = inputNamaTamu.value.replace(/\s+/g, ' ').trim();
         if (!nama) { tampilkanToast('Masukkan nama tamu terlebih dahulu.'); return; }
 
-        // URLSearchParams menghasilkan format ?to=Budi+Sudarsono
         const link = urlUndangan + '?' + new URLSearchParams({ to: nama }).toString();
         outputLink.value = link;
 
@@ -131,7 +123,6 @@ if (formGenerator) {
     });
 }
 
-// ---------- Pengaturan akun ----------
 const formAkun = document.getElementById('formAkun');
 if (formAkun) {
     formAkun.addEventListener('submit', async function (e) {
@@ -157,7 +148,6 @@ if (formAkun) {
     });
 }
 
-// ---------- Saat halaman dimuat ----------
 document.addEventListener('DOMContentLoaded', function () {
     const bagianDariHash = location.hash.slice(1);
     if (bagianDariHash && document.getElementById(bagianDariHash)?.classList.contains('page-section')) {

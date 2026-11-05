@@ -1,5 +1,4 @@
 <?php
-// Koneksi database, pengelolaan sesi, dan fungsi helper global
 require_once __DIR__ . '/config.php';
 
 date_default_timezone_set('Asia/Jakarta');

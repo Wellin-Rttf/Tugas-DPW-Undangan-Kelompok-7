@@ -1,5 +1,3 @@
--- Database Undangan Pernikahan Welling & Sheila
--- Struktur Tabel & Akun Admin Bawaan (admin / admin123)
 
 CREATE TABLE IF NOT EXISTS `tb_admin` (
   `id`          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -8,7 +6,6 @@ CREATE TABLE IF NOT EXISTS `tb_admin` (
   `dibuat_pada` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Akun Default: Username: admin | Password: admin123
 INSERT IGNORE INTO `tb_admin` (`id`, `username`, `password`) VALUES
 (1, 'admin', '$2y$10$aiWczWzv/AKicCRNJLvNaOEkHqT896QvxhMeW/S0rcDCVEtLIHx.O');
 

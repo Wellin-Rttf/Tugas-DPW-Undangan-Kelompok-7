@@ -11,7 +11,6 @@ const tombolMusik = document.getElementById('tombol-musik');
 const toastBox = document.getElementById('toast-box');
 const tombolSaveDate = document.getElementById('tombol-save-date');
 
-// Data ucapan dikirim dari index.php (database)
 let dataUcapan = Array.isArray(window.DATA_UCAPAN) ? window.DATA_UCAPAN : [];
 
 function bersihkanTeks(teks) {
@@ -50,7 +49,6 @@ function tampilkanUcapan() {
 }
 
 function tampilkanPaginasi(total) {
-  // belum lebih dari 1 halaman: nomor 1 saja, diabu-abukan
   if (total === 1) {
     paginasiUcapan.innerHTML = '<button type="button" class="nonaktif" disabled aria-label="Halaman 1">1</button>';
     return;
@@ -202,7 +200,6 @@ function jalankanCountdown() {
 function jalankanAnimasiMuncul() {
   const daftar = document.querySelectorAll('.animasi-muncul');
 
-  // jeda bertahap untuk elemen bersaudara (kartu dalam satu grid)
   daftar.forEach(function (el) {
     const induk = el.parentElement;
     if (induk.id === 'konten' || induk.tagName === 'SECTION') return;
@@ -215,7 +212,6 @@ function jalankanAnimasiMuncul() {
     return;
   }
 
-  // muncul ke atas setiap kali elemen masuk dari bawah layar saat scroll
   const observer = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       if (entry.isIntersecting) {
@@ -325,7 +321,6 @@ lightboxModal.addEventListener('touchend', (e) => {
 jalankanCountdown();
 tampilkanUcapan();
 
-// Efek "hover" di layar sentuh: kelas .sentuh ditambahkan saat elemen disentuh
 const TARGET_SENTUH = '.acara-card, .profil-mempelai-card, .timeline-item, .amplop-card, .radio-card, .galeri-item, .ig-mempelai, .tombol, .tombol-salin, .paginasi button';
 let elemenSentuh = null;
 let timerSentuh;

@@ -767,9 +767,7 @@ button, input, textarea, select { font-family: var(--font-bold); color: inherit;
   .nama-sampul-script { font-size: 2.6rem; margin-top: 0.4rem; }
 }
 
-/* ============ REVISI ============ */
 
-/* Wallpaper tunggal: sama untuk cover dan isi undangan */
 .latar-wallpaper {
   position: fixed;
   inset: -40px;
@@ -788,7 +786,6 @@ button, input, textarea, select { font-family: var(--font-bold); color: inherit;
 }
 .wadah-utama { z-index: 1; }
 
-/* Teks: di atas wallpaper = terang, di dalam kartu = gelap */
 .judul-bagian { color: var(--c-beige); text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45); }
 .subjudul-bagian, .petunjuk-galeri, .catatan-bawah { color: var(--c-tea); }
 .hiasan-bunga-top, .label-tamu, .icon-acara, .logo-bank, .ig-mempelai, .nama-mempelai-hero .nama, .info-mempelai h3,
@@ -807,7 +804,6 @@ button, input, textarea, select { font-family: var(--font-bold); color: inherit;
 .teks-kosong { text-align: center; font-style: italic; color: #4b5146; }
 .tanggal-ucapan { display: block; margin-top: 0.4rem; font-size: 0.7rem; color: #7a857c; }
 
-/* Formulir */
 .baris-input input[type="text"], .baris-input textarea {
   background: rgba(255, 255, 255, 0.75);
   border-color: rgba(78, 97, 81, 0.25);
@@ -817,7 +813,6 @@ button, input, textarea, select { font-family: var(--font-bold); color: inherit;
 .baris-input ::placeholder { color: #7a857c; }
 .baris-input input:focus, .baris-input textarea:focus { border-color: var(--c-granite); box-shadow: 0 0 0 3px rgba(233, 196, 106, 0.35); }
 
-/* Dropdown jumlah tamu (sesuai palet tema) */
 .dropdown { position: relative; }
 .dropdown-tombol {
   width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
@@ -842,7 +837,6 @@ button, input, textarea, select { font-family: var(--font-bold); color: inherit;
 .dropdown-opsi:hover, .dropdown-opsi:focus-visible { background: rgba(233, 196, 106, 0.35); color: var(--c-granite); }
 .dropdown-opsi.aktif { background: var(--c-tea); color: var(--c-granite); font-weight: 700; }
 
-/* Paginasi ucapan */
 .paginasi { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.1rem; }
 .paginasi button {
   min-width: 36px; height: 36px; padding: 0 0.5rem; border-radius: 50%;
@@ -855,7 +849,6 @@ button, input, textarea, select { font-family: var(--font-bold); color: inherit;
 .paginasi button.nonaktif { background: #e6e6e2; border-color: #d2d2ce; color: #9a9a96; cursor: not-allowed; }
 .daftar-ucapan { max-height: none; overflow: visible; }
 
-/* Countdown: putih gradien sesuai tema */
 .countdown-card {
   background: var(--grad-terang);
   -webkit-backdrop-filter: var(--blur-terang);
@@ -876,7 +869,6 @@ button, input, textarea, select { font-family: var(--font-bold); color: inherit;
 .countdown-item span { display: block; font-size: clamp(1.4rem, 6vw, 1.9rem); font-weight: 700; line-height: 1.1; }
 .countdown-item small { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
 
-/* Hover kartu acara & mempelai */
 .acara-card, .profil-mempelai-card { transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease; }
 .acara-card:hover, .profil-mempelai-card:hover {
   transform: translateY(-8px);
@@ -893,13 +885,11 @@ button, input, textarea, select { font-family: var(--font-bold); color: inherit;
 .ig-mempelai { transition: transform 0.25s ease; }
 .ig-mempelai:hover { transform: translateX(4px); }
 
-/* Hover perjalanan (timeline) */
 .timeline-content:hover { transform: translateY(-6px); border-color: rgba(233, 196, 106, 0.85); box-shadow: 0 16px 34px rgba(0, 0, 0, 0.3); }
 .timeline-item:hover .timeline-dot { transform: scale(1.25) rotate(-8deg); background: #f0cf78; }
 .timeline-dot i { transition: transform 0.3s ease; }
 .timeline-item:hover .timeline-dot i { transform: scale(1.15); }
 
-/* Hover RSVP */
 .radio-card span { color: #4b5146; background: rgba(255, 255, 255, 0.7); border-color: rgba(78, 97, 81, 0.25); }
 .radio-card:hover span { transform: translateY(-3px); border-color: var(--c-mustard); background: rgba(233, 196, 106, 0.3); color: var(--c-granite); box-shadow: 0 8px 16px rgba(78, 97, 81, 0.2); }
 .radio-card span i { transition: transform 0.3s ease; }
@@ -912,7 +902,6 @@ button, input, textarea, select { font-family: var(--font-bold); color: inherit;
 .tombol-isi-mewah:hover i { transform: translate(5px, -4px) rotate(8deg); }
 .tombol-isi-mewah:active { transform: translateY(0) scale(0.98); }
 
-/* Hadiah digital: buka / sembunyikan */
 .tombol-toggle { margin: 0 auto; }
 .tombol-toggle .ikon-panah { transition: transform 0.4s ease; }
 .tombol-toggle.aktif .ikon-panah { transform: rotate(180deg); }
@@ -927,7 +916,6 @@ button, input, textarea, select { font-family: var(--font-bold); color: inherit;
 .amplop-card { transition: transform 0.3s ease, border-color 0.3s ease; }
 .amplop-card:hover { transform: translateY(-4px); border-color: rgba(233, 196, 106, 0.8); }
 
-/* Konten muncul ke atas saat scroll */
 .animasi-muncul { opacity: 0; transition: opacity 0.25s ease, transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, background-color 0.3s ease; }
 .animasi-muncul.tampil { opacity: 1; animation: munculKeAtas 0.8s cubic-bezier(0.22, 1, 0.36, 1) backwards; animation-delay: var(--jeda, 0s); }
 @keyframes munculKeAtas {
@@ -935,7 +923,6 @@ button, input, textarea, select { font-family: var(--font-bold); color: inherit;
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Penutup */
 .bagian-penutup { padding-bottom: 1rem; }
 .penutup-konten { padding: clamp(1rem, 4vw, 2rem) 1rem; }
 .penutup-konten .hiasan-bunga-top { color: var(--c-mustard); }
@@ -953,12 +940,9 @@ button, input, textarea, select { font-family: var(--font-bold); color: inherit;
 }
 
 
-/* ============ REVISI HP ============ */
 
-/* Teks tidak diperbesar otomatis oleh browser HP */
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
-/* Kartu kaca: nilai ditulis langsung (tanpa var() pada backdrop-filter) + warna dasar cadangan */
 .kaca, .countdown-card {
   background-color: rgba(246, 248, 230, 0.3);
   -webkit-backdrop-filter: blur(14px) saturate(1.2);
@@ -971,18 +955,15 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
 }
 
-/* Tombol sama seperti desktop (tidak melebar penuh di HP) */
 @media (max-width: 480px) {
   .tombol-std { width: auto; max-width: 100%; font-size: 0.84rem; }
 }
 
-/* Dropdown jumlah tamu: selalu di atas kartu lain & bisa disentuh */
 .formulir-ucapan { position: relative; z-index: 20; }
 .dropdown { position: relative; z-index: 40; }
 .dropdown-tombol, .dropdown-opsi { touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
 .dropdown-opsi { min-height: 44px; display: flex; align-items: center; }
 
-/* Penutup: font & ukuran sama dengan desktop */
 .penutup-nama {
   font-family: var(--font-script);
   font-weight: 400;
@@ -993,7 +974,6 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 }
 .penutup-nama .ampersand { font-family: inherit; font-weight: 400; }
 
-/* Efek "hover" untuk layar sentuh: dipicu saat disentuh (kelas .sentuh dari script) */
 .acara-card.sentuh, .profil-mempelai-card.sentuh {
   transform: translateY(-8px);
   border-color: rgba(233, 196, 106, 0.8);
@@ -1018,5 +998,4 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 .tombol-salin.sentuh { background: var(--c-mustard); }
 .paginasi button.sentuh:not(:disabled) { transform: translateY(-2px); background: rgba(233, 196, 106, 0.4); border-color: var(--c-mustard); }
 
-/* Kolom jebakan bot (tidak terlihat manusia) */
 .jebakan { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }

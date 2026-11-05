@@ -4,13 +4,12 @@ require_once __DIR__ . '/koneksi.php';
 $pesanStatus = '';
 $statusSukses = false;
 
-// ---------- PENANGANAN FORM RSVP (POST) ----------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nama   = trim($_POST['nama'] ?? '');
     $pesan  = trim($_POST['pesan'] ?? '');
     $rsvp   = $_POST['rsvp'] ?? '';
     $jumlah = PILIHAN_JUMLAH[$_POST['jumlah'] ?? ''] ?? 0;
-    $bot    = $_POST['website'] ?? ''; // Honeypot anti-bot
+    $bot    = $_POST['website'] ?? '';
 
     if (!empty($bot)) {
         $pesanStatus = 'Terima kasih ucapan Anda telah terkirim!';
@@ -37,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// ---------- BACA PARAMETER TAMU ----------
 $namaTamu = $_GET['to'] ?? '';
 $namaTamu = is_string($namaTamu) ? strip_tags($namaTamu) : '';
 $namaTamu = trim((string) preg_replace('/[\p{C}\s]+/u', ' ', $namaTamu));
@@ -47,7 +45,6 @@ if (!$adaNamaTamu) {
     $namaTamu = 'Tamu Undangan';
 }
 
-// ---------- BACA DATA UCAPAN PUBLIK ----------
 $dataUcapan = [];
 if ($koneksi) {
     $hasil = $koneksi->query('SELECT nama, rsvp, jumlah_tamu, pesan, created_at FROM tb_ucapan WHERE tampil = 1 ORDER BY created_at DESC, id DESC LIMIT 500');
