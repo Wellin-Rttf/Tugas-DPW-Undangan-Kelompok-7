@@ -4,24 +4,23 @@ require_once __DIR__ . '/koneksi.php';
 $pesanNotif = '';
 $jenisNotif = '';
 
-// ---------- PROSES AKSI POST ADMIN ----------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $aksi = $_POST['aksi'] ?? '';
+    $aksi = ambil_post_string('aksi');
 
-    if (!cek_csrf($_POST['csrf'] ?? '')) {
+    if (!cek_csrf(ambil_post_string('csrf'))) {
         $pesanNotif = 'Sesi tidak valid. Muat ulang halaman lalu coba lagi.';
+        $jenisNotif = 'galat';
+    } elseif (!$koneksi && $aksi !== 'keluar') {
+        $pesanNotif = 'Koneksi database bermasalah. Silakan coba lagi nanti.';
         $jenisNotif = 'galat';
     } elseif ($aksi === 'masuk') {
         $sisaKunci = ($_SESSION['kunci_sampai'] ?? 0) - time();
         if ($sisaKunci > 0) {
             $pesanNotif = "Terlalu banyak percobaan. Coba lagi dalam {$sisaKunci} detik.";
             $jenisNotif = 'galat';
-        } elseif (!$koneksi) {
-            $pesanNotif = 'Server bermasalah, coba lagi nanti.';
-            $jenisNotif = 'galat';
         } else {
-            $username = trim($_POST['username'] ?? '');
-            $password = $_POST['password'] ?? '';
+            $username = trim(ambil_post_string('username'));
+            $password = ambil_post_string('password');
 
             $stmt = $koneksi->prepare('SELECT id, username, password FROM tb_admin WHERE username = ?');
             $stmt->bind_param('s', $username);
@@ -55,30 +54,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if ($aksi === 'toggle_tampil') {
-            $id = (int) ($_POST['id'] ?? 0);
-            $tampilBaru = (int) ($_POST['tampil_baru'] ?? 0) === 1 ? 1 : 0;
-            $stmt = $koneksi->prepare('UPDATE tb_ucapan SET tampil = ? WHERE id = ?');
-            $stmt->bind_param('ii', $tampilBaru, $id);
-            $stmt->execute();
-            $pesanNotif = $tampilBaru ? 'Ucapan berhasil ditampilkan kembali.' : 'Ucapan berhasil disembunyikan.';
-            $jenisNotif = 'sukses';
+            $id = filter_var(ambil_post_string('id'), FILTER_VALIDATE_INT);
+            $tampilBaru = ambil_post_string('tampil_baru') === '1' ? 1 : 0;
+
+            if ($id === false || $id < 1) {
+                $pesanNotif = 'ID ucapan tidak valid.';
+                $jenisNotif = 'galat';
+            } else {
+                $stmt = $koneksi->prepare('UPDATE tb_ucapan SET tampil = ? WHERE id = ?');
+                $stmt->bind_param('ii', $tampilBaru, $id);
+                $stmt->execute();
+                $pesanNotif = $tampilBaru ? 'Ucapan berhasil ditampilkan kembali.' : 'Ucapan berhasil disembunyikan.';
+                $jenisNotif = 'sukses';
+            }
         }
 
         if ($aksi === 'hapus') {
-            $id = (int) ($_POST['id'] ?? 0);
-            $stmt = $koneksi->prepare('DELETE FROM tb_ucapan WHERE id = ?');
-            $stmt->bind_param('i', $id);
-            $stmt->execute();
-            $pesanNotif = 'Ucapan & RSVP berhasil dihapus.';
-            $jenisNotif = 'sukses';
+            $id = filter_var(ambil_post_string('id'), FILTER_VALIDATE_INT);
+
+            if ($id === false || $id < 1) {
+                $pesanNotif = 'ID ucapan tidak valid.';
+                $jenisNotif = 'galat';
+            } else {
+                $stmt = $koneksi->prepare('DELETE FROM tb_ucapan WHERE id = ?');
+                $stmt->bind_param('i', $id);
+                $stmt->execute();
+                $pesanNotif = 'Ucapan & RSVP berhasil dihapus.';
+                $jenisNotif = 'sukses';
+            }
         }
 
         if ($aksi === 'ubah_akun') {
             $adminId      = (int) $_SESSION['admin_id'];
-            $usernameBaru = trim($_POST['username'] ?? '');
-            $passwordLama = $_POST['password_lama'] ?? '';
-            $passwordBaru = $_POST['password_baru'] ?? '';
-            $konfirmasi   = $_POST['konfirmasi'] ?? '';
+            $usernameBaru = trim(ambil_post_string('username'));
+            $passwordLama = ambil_post_string('password_lama');
+            $passwordBaru = ambil_post_string('password_baru');
+            $konfirmasi   = ambil_post_string('konfirmasi');
 
             if (!preg_match('/^[A-Za-z0-9_.-]{3,50}$/', $usernameBaru)) {
                 $pesanNotif = 'Username 3-50 karakter: huruf, angka, titik, strip, atau garis bawah.';
@@ -118,9 +129,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $login = sudah_login();
+if ($login && !$koneksi && $pesanNotif === '') {
+    $pesanNotif = 'Koneksi database bermasalah. Data dashboard belum dapat dimuat.';
+    $jenisNotif = 'galat';
+}
 $csrf  = token_csrf();
 
-// ---------- KELOLA DATA UNTUK DITAMPILKAN ----------
 $daftarUcapan = [];
 $rekap = ['Hadir' => 0, 'Tidak Hadir' => 0, 'Masih Ragu' => 0];
 $estimasiTamu = 0;
@@ -156,8 +170,8 @@ $urlUndangan = $skema . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/dashboard.css">
 </head>
-<body>
-
+<body data-url-undangan="<?= h($urlUndangan) ?>">
+    
     <div class="latar-wallpaper" aria-hidden="true"></div>
 
     <div class="dashboard-wrapper">
@@ -355,38 +369,6 @@ $urlUndangan = $skema . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost')
         </div>
     </div>
 
-    <!-- JAVASCRIPT SEDERHANA DIREKTURAN UNTUK DASHBOARD -->
-    <script>
-    const urlUndanganBase = "<?= h($urlUndangan) ?>";
-
-    function buatLinkTamu() {
-        const input = document.getElementById('inputNamaTamu');
-        const nama = input.value.trim().replace(/\s+/g, ' ');
-        if (!nama) { alert('Masukkan nama tamu terlebih dahulu.'); return; }
-
-        const link = urlUndanganBase + '?to=' + encodeURIComponent(nama);
-        document.getElementById('outputLink').value = link;
-
-        const pesanWa = 'Assalamu\'alaikum Warahmatullahi Wabarakatuh.\n\n' +
-            'Kepada Yth. ' + nama + ',\n' +
-            'Dengan penuh rasa syukur, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di pernikahan Welling & Sheila pada Minggu, 12 Desember 2027.\n\n' +
-            'Detail undangan dapat dilihat pada tautan berikut:\n' + link + '\n\n' +
-            'Merupakan kehormatan bagi kami apabila Anda berkenan hadir. Terima kasih.';
-        
-        document.getElementById('btnKirimWa').href = 'https://wa.me/?text=' + encodeURIComponent(pesanWa);
-        document.getElementById('hasilLink').classList.remove('hidden');
-    }
-
-    function salinLinkTamu() {
-        const output = document.getElementById('outputLink');
-        output.select();
-        navigator.clipboard.writeText(output.value).then(() => {
-            alert('Link undangan berhasil disalin!');
-        }).catch(() => {
-            document.execCommand('copy');
-            alert('Link undangan disalin!');
-        });
-    }
-    </script>
+<script src="assets/scripts/dashboard.js" defer></script>
 </body>
 </html>

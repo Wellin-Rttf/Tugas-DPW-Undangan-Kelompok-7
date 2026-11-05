@@ -9,7 +9,6 @@ const daftarUcapan = document.getElementById('daftar-ucapan');
 const musikLatar = document.getElementById('musik-latar');
 const tombolMusik = document.getElementById('tombol-musik');
 const toastBox = document.getElementById('toast-box');
-const tombolSaveDate = document.getElementById('tombol-save-date');
 
 let dataUcapan = Array.isArray(window.DATA_UCAPAN) ? window.DATA_UCAPAN : [];
 
@@ -70,12 +69,12 @@ paginasiUcapan.addEventListener('click', function (e) {
   daftarUcapan.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 
-
 tombolBuka.addEventListener('click', function () {
+  sessionStorage.setItem('undanganTerbuka', '1');
   sampul.style.transform = 'translateY(-100%)';
 
   if (musikLatar) {
-    musikLatar.play().catch(e => console.log('Autoplay ditahan browser:', e));
+    musikLatar.play().catch(() => {});
     tombolMusik.classList.remove('hidden');
   }
 
@@ -84,10 +83,24 @@ tombolBuka.addEventListener('click', function () {
     konten.style.display = 'block';
     document.body.classList.remove('kunci-scroll');
     window.scrollTo(0, 0);
-
     jalankanAnimasiMuncul();
   }, 700);
 });
+
+if (sessionStorage.getItem('undanganTerbuka') === '1') {
+  sampul.style.display = 'none';
+  konten.style.display = 'block';
+  document.body.classList.remove('kunci-scroll');
+
+  jalankanAnimasiMuncul();
+
+  if (location.hash === '#formulir-ucapan') {
+    setTimeout(() => {
+      document.getElementById('formulir-ucapan')
+        .scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 150);
+  }
+}
 
 tombolMusik.addEventListener('click', function () {
   if (musikLatar.paused) {
@@ -140,31 +153,93 @@ function tampilkanToast(pesan) {
   setTimeout(() => toastBox.classList.remove('tampil'), 3000);
 }
 
-function salinTeks(elementId, pesanSukses) {
-  const teks = document.getElementById(elementId).innerText;
-  navigator.clipboard.writeText(teks)
-    .then(() => tampilkanToast(pesanSukses))
-    .catch(() => tampilkanToast('Gagal menyalin, silakan salin manual.'));
+async function salinKeClipboard(teks) {
+  if (navigator.clipboard && window.isSecureContext) {
+    try {
+      await navigator.clipboard.writeText(teks);
+      return true;
+    } catch (e) {}
+  }
+
+  if (typeof document.execCommand !== 'function') return false;
+
+  const area = document.createElement('textarea');
+  area.value = teks;
+  area.setAttribute('readonly', '');
+  area.style.position = 'fixed';
+  area.style.left = '-9999px';
+  area.style.top = '0';
+  document.body.appendChild(area);
+  area.select();
+  area.setSelectionRange(0, area.value.length);
+
+  let berhasil = false;
+  try { berhasil = document.execCommand('copy'); } catch (e) { berhasil = false; }
+  area.remove();
+  return berhasil;
 }
 
-tombolSaveDate.addEventListener('click', function () {
-  const gCalUrl = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Pernikahan+Welling+%26+Sheila&dates=20271212T080000/20271212T160000&details=Acara+Pernikahan+Welling+%26+Sheila.&location=Hotel+Pangeran+Pekanbaru";
-  window.open(gCalUrl, '_blank');
-  tampilkanToast('Membuka Kalender Google...');
-});
+async function salinTeks(elementId, pesanSukses) {
+  const elemen = document.getElementById(elementId);
+  if (!elemen) {
+    tampilkanToast('Teks yang akan disalin tidak ditemukan.');
+    return;
+  }
+  const teks = (elemen.textContent || '').trim();
+  const berhasil = await salinKeClipboard(teks);
+  tampilkanToast(berhasil ? pesanSukses : 'Gagal menyalin. Silakan salin teks secara manual.');
+}
+
+function simpanKeGoogleCalendar(jenis) {
+  const acara = {
+    akad: {
+      judul: 'Akad Nikah Welling & Sheila',
+      mulai: '20271212T080000',
+      selesai: '20271212T100000',
+      lokasi: 'Masjid Agung Ar-Rahman, Pekanbaru'
+    },
+    resepsi: {
+      judul: 'Resepsi Pernikahan Welling & Sheila',
+      mulai: '20271212T130000',
+      selesai: '20271212T160000',
+      lokasi: 'Hotel Pangeran, Pekanbaru'
+    }
+  };
+
+  const data = acara[jenis];
+  if (!data) return;
+
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: data.judul,
+    dates: `${data.mulai}/${data.selesai}`,
+    details: 'Kami mengundang Anda untuk menghadiri acara pernikahan Welling & Sheila.',
+    location: data.lokasi,
+    ctz: 'Asia/Jakarta'
+  });
+
+  window.open(
+    `https:`,
+    '_blank',
+    'noopener,noreferrer'
+  );
+}
 
 function jalankanCountdown() {
-  const tglAcara = new Date('December 12, 2027 08:00:00').getTime();
+  const tglAcara = new Date('2027-12-12T08:00:00+07:00').getTime();
+  const elHari = document.getElementById('cd-hari');
+  const elJam = document.getElementById('cd-jam');
+  const elMenit = document.getElementById('cd-menit');
+  const elDetik = document.getElementById('cd-detik');
   const dua = (n) => (n < 10 ? '0' + n : n);
 
   function hitung() {
     const selisih = tglAcara - Date.now();
     if (selisih <= 0) return;
-
-    document.getElementById('cd-hari').textContent = dua(Math.floor(selisih / 86400000));
-    document.getElementById('cd-jam').textContent = dua(Math.floor((selisih % 86400000) / 3600000));
-    document.getElementById('cd-menit').textContent = dua(Math.floor((selisih % 3600000) / 60000));
-    document.getElementById('cd-detik').textContent = dua(Math.floor((selisih % 60000) / 1000));
+    elHari.textContent = dua(Math.floor(selisih / 86400000));
+    elJam.textContent = dua(Math.floor((selisih % 86400000) / 3600000));
+    elMenit.textContent = dua(Math.floor((selisih % 3600000) / 60000));
+    elDetik.textContent = dua(Math.floor((selisih % 60000) / 1000));
   }
 
   hitung();
@@ -190,7 +265,7 @@ function jalankanAnimasiMuncul() {
     entries.forEach(function (entry) {
       if (entry.isIntersecting) {
         entry.target.classList.add('tampil');
-      } else if (entry.boundingClientRect.top > 0) {
+      } else if (entry.target.getBoundingClientRect().top > 0) {
         entry.target.classList.remove('tampil');
       }
     });
@@ -235,36 +310,60 @@ const lightboxNext = document.getElementById('lightbox-next');
 const galleryItems = document.querySelectorAll('#galeri-foto img');
 
 let currentImgIndex = 0;
-const imageList = [];
-
-galleryItems.forEach((img, index) => {
-  imageList.push(img.src);
-  img.parentElement.addEventListener('click', () => openLightbox(index));
-});
+let elemenPemicuLightbox = null;
 
 function tampilkanFoto() {
-  lightboxImg.src = imageList[currentImgIndex];
+  const img = galleryItems[currentImgIndex];
+  lightboxImg.src = img.src;
+  lightboxImg.alt = img.alt;
 }
 
-function openLightbox(index) {
+function openLightbox(index, pemicu) {
+  if (galleryItems.length === 0) return;
+
   currentImgIndex = index;
+  elemenPemicuLightbox = pemicu || document.activeElement;
   tampilkanFoto();
+  lightboxModal.inert = false;
+  lightboxModal.setAttribute('aria-hidden', 'false');
   lightboxModal.classList.add('aktif');
+  lightboxClose.focus({ preventScroll: true });
 }
 
 function closeLightbox() {
   lightboxModal.classList.remove('aktif');
+  lightboxModal.setAttribute('aria-hidden', 'true');
+  lightboxModal.inert = true;
+
+  if (elemenPemicuLightbox && elemenPemicuLightbox.isConnected) {
+    elemenPemicuLightbox.focus({ preventScroll: true });
+  }
+  elemenPemicuLightbox = null;
 }
 
 function fotoBerikutnya() {
-  currentImgIndex = (currentImgIndex + 1) % imageList.length;
+  if (galleryItems.length === 0) return;
+  currentImgIndex = (currentImgIndex + 1) % galleryItems.length;
   tampilkanFoto();
 }
 
 function fotoSebelumnya() {
-  currentImgIndex = (currentImgIndex - 1 + imageList.length) % imageList.length;
+  if (galleryItems.length === 0) return;
+  currentImgIndex = (currentImgIndex - 1 + galleryItems.length) % galleryItems.length;
   tampilkanFoto();
 }
+
+galleryItems.forEach((img, index) => {
+  const pemicu = img.parentElement;
+
+  pemicu.addEventListener('click', () => openLightbox(index, pemicu));
+  pemicu.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openLightbox(index, pemicu);
+    }
+  });
+});
 
 lightboxClose.addEventListener('click', closeLightbox);
 lightboxNext.addEventListener('click', fotoBerikutnya);
@@ -276,9 +375,25 @@ lightboxModal.addEventListener('click', (e) => {
 
 document.addEventListener('keydown', (e) => {
   if (!lightboxModal.classList.contains('aktif')) return;
-  if (e.key === 'Escape') closeLightbox();
-  if (e.key === 'ArrowRight') fotoBerikutnya();
-  if (e.key === 'ArrowLeft') fotoSebelumnya();
+
+  if (e.key === 'Escape') { e.preventDefault(); closeLightbox(); return; }
+  if (e.key === 'ArrowRight') { e.preventDefault(); fotoBerikutnya(); return; }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); fotoSebelumnya(); return; }
+
+  if (e.key === 'Tab') {
+    const elemenFokus = Array.from(lightboxModal.querySelectorAll('button:not([disabled])'));
+    if (elemenFokus.length === 0) return;
+
+    const pertama = elemenFokus[0];
+    const terakhir = elemenFokus[elemenFokus.length - 1];
+    if (e.shiftKey && document.activeElement === pertama) {
+      e.preventDefault();
+      terakhir.focus();
+    } else if (!e.shiftKey && document.activeElement === terakhir) {
+      e.preventDefault();
+      pertama.focus();
+    }
+  }
 });
 
 let sentuhAwalX = 0;
@@ -294,6 +409,8 @@ lightboxModal.addEventListener('touchend', (e) => {
 
 jalankanCountdown();
 tampilkanUcapan();
+
+if (window.PESAN_STATUS) tampilkanToast(window.PESAN_STATUS);
 
 const TARGET_SENTUH = '.acara-card, .profil-mempelai-card, .timeline-item, .amplop-card, .radio-card, .galeri-item, .ig-mempelai, .tombol, .tombol-salin, .paginasi button';
 let elemenSentuh = null;

@@ -464,6 +464,16 @@ button, input, textarea, select { font-family: var(--font-bold); color: inherit;
 
 .galeri-item.item-besar { grid-column: span 2; aspect-ratio: 16 / 9; }
 
+.galeri-item:focus-visible {
+  outline: 3px solid var(--c-mustard);
+  outline-offset: 3px;
+}
+
+.lightbox-modal button:focus-visible {
+  outline: 3px solid var(--c-mustard);
+  outline-offset: 3px;
+}
+
 .galeri-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
 
 .overlay-zoom {
@@ -999,3 +1009,29 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 .paginasi button.sentuh:not(:disabled) { transform: translateY(-2px); background: rgba(233, 196, 106, 0.4); border-color: var(--c-mustard); }
 
 .jebakan { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+.kalender-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.kalender-actions .tombol {
+  min-width: 190px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+@media (max-width: 480px) {
+  .kalender-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .kalender-actions .tombol {
+    width: 100%;
+    max-width: 280px;
+  }
+}

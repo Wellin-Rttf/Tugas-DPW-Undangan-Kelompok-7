@@ -29,15 +29,17 @@ try {
 const PILIHAN_JUMLAH = ['1 Orang' => 1, '2 Orang' => 2, '3+ Orang' => 3];
 const PILIHAN_RSVP   = ['Hadir', 'Tidak Hadir', 'Masih Ragu'];
 
+function ambil_post_string($nama, $default = '') {
+    $nilai = $_POST[$nama] ?? $default;
+    return is_string($nilai) ? $nilai : $default;
+}
+
 function h($teks) {
     return htmlspecialchars((string) $teks, ENT_QUOTES, 'UTF-8');
 }
 
 function potong_teks($teks, $panjang = 60) {
-    if (function_exists('mb_substr')) {
-        return mb_substr($teks, 0, $panjang);
-    }
-    return substr($teks, 0, $panjang);
+    return mb_substr($teks, 0, $panjang);
 }
 
 function label_jumlah($angka) {

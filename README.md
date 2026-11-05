@@ -8,6 +8,7 @@ Website undangan pernikahan digital satu halaman dengan gaya *glassmorphism*. Ha
 **Dosen Pengampu:** Edi Susilo, M.Kom., M.Eng.
 
 **Anggota:**
+
 1. Callista Hana Elvaretta (25071104091)
 2. Raziq Muflih (25071101697)
 3. Sheila Medina Hartono (25071103589)
@@ -21,13 +22,14 @@ Website undangan pernikahan digital satu halaman dengan gaya *glassmorphism*. Ha
 - Galeri foto dengan *lightbox* (klik, panah keyboard, dan geser di HP)
 - Perjalanan kisah dalam bentuk timeline responsif
 - Hadiah digital dengan tombol salin nomor rekening
-- Tombol simpan tanggal ke Google Calendar
-- Form RSVP dan ucapan (tersimpan di LocalStorage browser)
+- Tombol unduh file kalender (.ics) berisi dua acara: akad dan resepsi
+- Form RSVP dan ucapan yang tersimpan di database MySQL
 - Tampilan responsif untuk PC dan HP
 - Dashboard admin untuk melihat ucapan tamu
 
 ## Catatan
 
-Akun admin *default*:
-   - **Username:** `admin`
-   - **Password:** `admin123`
+Akun admin demo:
+
+- **Username:** `admin`
+- **Password:** `admin123`

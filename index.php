@@ -1,48 +1,48 @@
 <?php
 require_once __DIR__ . '/koneksi.php';
 
-$pesanStatus = '';
-$statusSukses = false;
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nama   = trim($_POST['nama'] ?? '');
-    $pesan  = trim($_POST['pesan'] ?? '');
-    $rsvp   = $_POST['rsvp'] ?? '';
-    $jumlah = PILIHAN_JUMLAH[$_POST['jumlah'] ?? ''] ?? 0;
-    $bot    = $_POST['website'] ?? '';
-
-    if (!empty($bot)) {
-        $pesanStatus = 'Terima kasih ucapan Anda telah terkirim!';
-        $statusSukses = true;
-    } elseif (isset($_SESSION['ucapan_terakhir']) && time() - $_SESSION['ucapan_terakhir'] < 10) {
-        $pesanStatus = 'Mohon tunggu beberapa detik sebelum mengirim ucapan lagi.';
-    } elseif ($nama === '' || $pesan === '') {
-        $pesanStatus = 'Nama dan pesan wajib diisi.';
-    } elseif (strlen($nama) > 100 || strlen($pesan) > 1000) {
-        $pesanStatus = 'Nama maksimal 100 karakter dan pesan maksimal 1000 karakter.';
-    } elseif (!in_array($rsvp, PILIHAN_RSVP, true) || $jumlah === 0) {
-        $pesanStatus = 'Pilihan kehadiran tidak valid.';
-    } elseif (!$koneksi) {
-        $pesanStatus = 'Koneksi server bermasalah, silakan coba lagi nanti.';
-    } else {
-        $waktu = date('Y-m-d H:i:s');
-        $stmt = $koneksi->prepare('INSERT INTO tb_ucapan (nama, rsvp, jumlah_tamu, pesan, created_at) VALUES (?, ?, ?, ?, ?)');
-        $stmt->bind_param('ssiss', $nama, $rsvp, $jumlah, $pesan, $waktu);
-        $stmt->execute();
-
-        $_SESSION['ucapan_terakhir'] = time();
-        $pesanStatus = 'Konfirmasi & ucapan Anda berhasil dikirim!';
-        $statusSukses = true;
-    }
-}
-
 $namaTamu = $_GET['to'] ?? '';
 $namaTamu = is_string($namaTamu) ? strip_tags($namaTamu) : '';
-$namaTamu = trim((string) preg_replace('/[\p{C}\s]+/u', ' ', $namaTamu));
-$namaTamu = potong_teks($namaTamu, 60);
+$namaTamu = potong_teks(trim(preg_replace('/[\p{C}\s]+/u', ' ', $namaTamu)), 60);
 $adaNamaTamu = $namaTamu !== '';
-if (!$adaNamaTamu) {
-    $namaTamu = 'Tamu Undangan';
+$actionForm = 'index.php' . ($adaNamaTamu ? '?to=' . rawurlencode($namaTamu) : '') . '#formulir-ucapan';
+if (!$adaNamaTamu) $namaTamu = 'Tamu Undangan';
+
+$pesanStatus = $_SESSION['flash'] ?? '';
+unset($_SESSION['flash']);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nama   = trim(ambil_post_string('nama'));
+    $pesan  = trim(ambil_post_string('pesan'));
+    $rsvp   = ambil_post_string('rsvp');
+    $jumlah = PILIHAN_JUMLAH[ambil_post_string('jumlah')] ?? 0;
+    $galat  = null;
+
+    if (trim(ambil_post_string('website')) === '') {
+        if (isset($_SESSION['ucapan_terakhir']) && time() - $_SESSION['ucapan_terakhir'] < 10) {
+            $galat = 'Mohon tunggu beberapa detik sebelum mengirim ucapan lagi.';
+        } elseif ($nama === '' || $pesan === '') {
+            $galat = 'Nama dan pesan wajib diisi.';
+        } elseif (strlen($nama) > 100 || strlen($pesan) > 1000) {
+            $galat = 'Nama maksimal 100 karakter dan pesan maksimal 1000 karakter.';
+        } elseif (!in_array($rsvp, PILIHAN_RSVP, true) || $jumlah === 0) {
+            $galat = 'Pilihan kehadiran tidak valid.';
+        } elseif (!$koneksi) {
+            $galat = 'Koneksi server bermasalah, silakan coba lagi nanti.';
+        } else {
+            $stmt = $koneksi->prepare('INSERT INTO tb_ucapan (nama, rsvp, jumlah_tamu, pesan, created_at) VALUES (?, ?, ?, ?, NOW())');
+            $stmt->bind_param('ssis', $nama, $rsvp, $jumlah, $pesan);
+            $stmt->execute();
+            $_SESSION['ucapan_terakhir'] = time();
+        }
+    }
+
+    if ($galat === null) {
+        $_SESSION['flash'] = 'Konfirmasi & ucapan Anda berhasil dikirim!';
+        header('Location: ' . $actionForm, true, 303);
+        exit;
+    }
+    $pesanStatus = $galat;
 }
 
 $dataUcapan = [];
@@ -66,14 +66,17 @@ if ($koneksi) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#4E6151">
   <title>Undangan Pernikahan - Welling & Sheila</title>
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
-  
-  <script>window.DATA_UCAPAN = <?= json_encode($dataUcapan, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
+
+  <script>
+    window.DATA_UCAPAN = <?= json_encode($dataUcapan, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+    window.PESAN_STATUS = <?= json_encode($pesanStatus, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+  </script>
   <script src="assets/scripts/script.js" defer></script>
 </head>
 <body class="kunci-scroll">
@@ -82,9 +85,9 @@ if ($koneksi) {
 
   <audio id="musik-latar" loop preload="none">
     <source src="assets/music/SomethingGreaterInterlude.m4a" type="audio/mp4">
-    Browser Anda tidak mendukung elemen audio. 
+    Browser Anda tidak mendukung elemen audio.
   </audio>
-  
+
   <button id="tombol-musik" class="tombol-musik hidden" aria-label="Toggle Musik">
     <i class="fa-solid fa-compact-disc putar"></i>
   </button>
@@ -119,21 +122,21 @@ if ($koneksi) {
             Assalamu'alaikum Warahmatullahi Wabarakatuh.<br>
             Dengan memohon rahmat dan ridha Allah SWT, kami bermaksud mengundang Anda dalam momen bahagia pernikahan kami:
           </p>
-          
+
           <div class="nama-mempelai-hero">
             <span class="nama">Welling</span>
             <span class="simbol">&amp;</span>
             <span class="nama">Sheila</span>
           </div>
-          
+
           <div class="badge-tanggal">
             <i class="fa-regular fa-calendar-check"></i> Minggu, 12 Desember 2027
           </div>
-          
+
           <div class="foto-mempelai-wrapper">
             <img class="foto-mempelai" src="assets/images/2.jpg" alt="Welling dan Sheila">
           </div>
-          
+
           <blockquote class="kutipan-ayat">
             <p class="ayat">"Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang."</p>
             <cite class="sumber-ayat">— QS. Ar-Rum: 21</cite>
@@ -145,7 +148,7 @@ if ($koneksi) {
         <div class="countdown-card animasi-muncul">
           <h2 class="judul-bagian">Hitung Mundur Hari Bahagia</h2>
           <p class="subjudul-bagian">Menghitung hari menuju momen bahagia kami</p>
-          
+
           <div class="countdown-grid" id="countdown">
             <div class="countdown-item">
               <span id="cd-hari">00</span>
@@ -232,34 +235,44 @@ if ($koneksi) {
 
         <div class="banner-acara animasi-muncul">
           <img loading="lazy" class="foto-acara" src="assets/images/8.jpg" alt="Tukar Cincin">
-          <button class="tombol tombol-std" id="tombol-save-date">
-            <i class="fa-solid fa-calendar-plus"></i> Simpan ke Kalender
-          </button>
+          <div class="kalender-actions">
+            <button type="button" class="tombol tombol-std"
+                    onclick="simpanKeGoogleCalendar('akad')">
+              <i class="fa-solid fa-calendar-plus"></i>
+              Simpan Akad Nikah
+            </button>
+
+            <button type="button" class="tombol tombol-std"
+                    onclick="simpanKeGoogleCalendar('resepsi')">
+              <i class="fa-solid fa-calendar-plus"></i>
+              Simpan Resepsi
+            </button>
+          </div>
         </div>
       </section>
 
       <section class="bagian">
         <h2 class="judul-bagian animasi-muncul">Galeri Kami</h2>
         <p class="petunjuk-galeri animasi-muncul"><i class="fa-solid fa-hand-pointer"></i> Klik foto untuk memperbesar &amp; melihat slide</p>
-        
+
         <div class="galeri-foto-modern" id="galeri-foto">
-          <div class="galeri-item item-besar animasi-muncul">
+          <div class="galeri-item item-besar animasi-muncul" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="lightbox-modal" aria-label="Perbesar foto galeri 1">
             <img loading="lazy" src="assets/images/3.jpg" alt="Galeri Momen 1">
             <div class="overlay-zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
           </div>
-          <div class="galeri-item animasi-muncul">
+          <div class="galeri-item animasi-muncul" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="lightbox-modal" aria-label="Perbesar foto galeri 2">
             <img loading="lazy" src="assets/images/4.jpg" alt="Galeri Momen 2">
             <div class="overlay-zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
           </div>
-          <div class="galeri-item animasi-muncul">
+          <div class="galeri-item animasi-muncul" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="lightbox-modal" aria-label="Perbesar foto galeri 3">
             <img loading="lazy" src="assets/images/5.jpg" alt="Galeri Momen 3">
             <div class="overlay-zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
           </div>
-          <div class="galeri-item animasi-muncul">
+          <div class="galeri-item animasi-muncul" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="lightbox-modal" aria-label="Perbesar foto galeri 4">
             <img loading="lazy" src="assets/images/6.jpg" alt="Galeri Momen 4">
             <div class="overlay-zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
           </div>
-          <div class="galeri-item animasi-muncul">
+          <div class="galeri-item animasi-muncul" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="lightbox-modal" aria-label="Perbesar foto galeri 5">
             <img loading="lazy" src="assets/images/7.jpg" alt="Galeri Momen 5">
             <div class="overlay-zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
           </div>
@@ -269,7 +282,7 @@ if ($koneksi) {
       <section class="bagian">
         <h2 class="judul-bagian animasi-muncul">Perjalanan Kami</h2>
         <div class="timeline">
-          
+
           <div class="timeline-item left">
             <div class="timeline-dot animasi-muncul"><i class="fa-solid fa-heart"></i></div>
             <div class="timeline-content kaca animasi-muncul">
@@ -339,11 +352,7 @@ if ($koneksi) {
         <h2 class="judul-bagian animasi-muncul">Konfirmasi &amp; Ucapan</h2>
         <p class="pengantar-ucapan subjudul-bagian animasi-muncul">Konfirmasi kehadiran Anda &amp; berikan ucapan hangat untuk kedua mempelai</p>
 
-        <?php if ($pesanStatus !== ''): ?>
-          <div class="pemberitahuan <?= $statusSukses ? 'sukses' : 'galat' ?>"><?= h($pesanStatus) ?></div>
-        <?php endif; ?>
-
-        <form id="formulir-ucapan" class="formulir-ucapan kaca animasi-muncul" action="index.php?to=<?= urlencode($namaTamu) ?>#formulir-ucapan" method="post">
+        <form id="formulir-ucapan" class="formulir-ucapan kaca animasi-muncul" action="<?= h($actionForm) ?>" method="post">
           <input type="text" name="website" class="jebakan" tabindex="-1" autocomplete="off" aria-hidden="true">
           <div class="baris-input">
             <label for="input-nama">Nama Lengkap</label>
@@ -417,13 +426,14 @@ if ($koneksi) {
 
   </div>
 
-  <div id="lightbox-modal" class="lightbox-modal" aria-hidden="true">
-    <button class="lightbox-close" id="lightbox-close" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
-    <button class="lightbox-prev" id="lightbox-prev" aria-label="Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
+  <div id="lightbox-modal" class="lightbox-modal" role="dialog" aria-modal="true"
+       aria-label="Galeri foto" aria-hidden="true" inert tabindex="-1">
+    <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
+    <button type="button" class="lightbox-prev" id="lightbox-prev" aria-label="Foto sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
     <div class="lightbox-container">
-      <img class="lightbox-img" id="lightbox-img" src="" alt="Zoom Foto Galeri">
+      <img class="lightbox-img" id="lightbox-img" src="" alt="Foto galeri">
     </div>
-    <button class="lightbox-next" id="lightbox-next" aria-label="Selanjutnya"><i class="fa-solid fa-chevron-right"></i></button>
+    <button type="button" class="lightbox-next" id="lightbox-next" aria-label="Foto berikutnya"><i class="fa-solid fa-chevron-right"></i></button>
   </div>
 
   <div id="toast-box" class="toast-box"></div>
