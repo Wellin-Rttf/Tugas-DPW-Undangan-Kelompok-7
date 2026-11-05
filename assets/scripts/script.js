@@ -153,32 +153,6 @@ tombolSaveDate.addEventListener('click', function () {
   tampilkanToast('Membuka Kalender Google...');
 });
 
-formulirUcapan.addEventListener('submit', async function (e) {
-  e.preventDefault();
-
-  const tombolKirim = formulirUcapan.querySelector('button[type="submit"]');
-  tombolKirim.disabled = true;
-
-  try {
-    const respons = await fetch(formulirUcapan.action, { method: 'POST', body: new FormData(formulirUcapan) });
-    const hasil = await respons.json();
-
-    if (hasil.ok) {
-      if (hasil.ucapan) {
-        halamanUcapan = 1;
-        dataUcapan.unshift(hasil.ucapan);
-        tampilkanUcapan();
-      }
-      formulirUcapan.reset();
-    }
-    tampilkanToast(hasil.pesan);
-  } catch (err) {
-    tampilkanToast('Gagal mengirim. Periksa koneksi internet lalu coba lagi.');
-  }
-
-  tombolKirim.disabled = false;
-});
-
 function jalankanCountdown() {
   const tglAcara = new Date('December 12, 2027 08:00:00').getTime();
   const dua = (n) => (n < 10 ? '0' + n : n);
