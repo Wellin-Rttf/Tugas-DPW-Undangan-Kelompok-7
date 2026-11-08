@@ -1035,3 +1035,13 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     max-width: 280px;
   }
 }
+
+.catatan-edit {
+  margin-bottom: 1rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 12px;
+  background: rgba(233, 196, 106, 0.28);
+  border: 1px solid rgba(233, 196, 106, 0.7);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
