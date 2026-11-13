@@ -96,7 +96,7 @@ function konten_default(): array
             'pengantar' => 'Doa restu Anda adalah hadiah terindah. Bagi yang ingin memberikan tanda kasih, dapat mengirimkannya melalui:',
             'rekening'  => [
                 ['bank' => 'Bank BCA',     'nomor' => '1234 5678 90', 'atas_nama' => 'Welling Simangunsong'],
-                ['bank' => 'Bank Mandiri', 'nomor' => '0987 6543 21', 'atas_nama' => 'Sheila Nurhaliza'],
+                ['bank' => 'Bank Mandiri', 'nomor' => '0987 6543 21', 'atas_nama' => 'Sheila Medina'],
             ],
         ],
     ];
