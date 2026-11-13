@@ -30,17 +30,17 @@ CREATE TABLE IF NOT EXISTS `tb_pengaturan` (
   `kunci` VARCHAR(50) NOT NULL PRIMARY KEY,
   `nilai` MEDIUMTEXT  NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
--- 50 tamu awal (nomor 1 = Riaa). Sama dengan data_tamu_awal.php.
+
 INSERT IGNORE INTO `tb_tamu` (`id`, `nama`) VALUES
 (1, 'Riaa'),
-(2, 'Budi Sudarsono'),
-(3, 'Siti Rahmawati'),
-(4, 'Agus Pratama'),
-(5, 'Dewi Lestari'),
-(6, 'Rizky Maulana'),
-(7, 'Putri Ananda'),
-(8, 'Hendra Gunawan'),
-(9, 'Maya Sari'),
+(2, 'Uli'),
+(3, 'Deri'),
+(4, 'Taufiq Lubis'),
+(5, 'Josua Simatupang'),
+(6, 'Ilham'),
+(7, 'Alif Syahbani'),
+(8, 'Denada Tessa'),
+(9, 'Alwiy'),
 (10, 'Doni Saputra'),
 (11, 'Lestari Wulandari'),
 (12, 'Fajar Nugroho'),
