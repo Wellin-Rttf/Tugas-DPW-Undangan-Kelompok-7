@@ -1,20 +1,14 @@
 <?php
-/**
- * Daftar tamu awal (array).
- * Urutan di array = nomor tamu (indeks 0 => nomor 1, dst.).
- * Dipakai sekali saja untuk mengisi tabel tb_tamu bila masih kosong.
- * Setelah itu, daftar tamu dikelola lewat Dashboard > Tamu.
- */
 return [
     'Riaa',
-    'Uli',
+    'Pak Edi',
     'Deri',
-    'Taufiq Lubis',
-    'Josua Simatupang',
     'Ilham',
+    'Josua Simatupang',
     'Alif Syahbani',
     'Denada Tessa',
     'Alwiy',
+    'Maya Sari',
     'Doni Saputra',
     'Lestari Wulandari',
     'Fajar Nugroho',
@@ -44,7 +38,7 @@ return [
     'Ulfa Rahmi',
     'Vino Bastian',
     'Winda Sari',
-    'Xaverius Manurung',
+    'Taufiq Lubis',
     'Yuni Astuti',
     'Zaki Firmansyah',
     'Ayu Ningsih',

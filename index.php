@@ -17,11 +17,7 @@ $namaTamu = '';
 $parameterTo = '';
 if ($kodeTamu !== '' && ctype_digit($kodeTamu)) {
     if ($koneksi && strlen($kodeTamu) <= 9) {
-        $idCari = (int) $kodeTamu;
-        $stmt = $koneksi->prepare('SELECT id, nama FROM tb_tamu WHERE id = ?');
-        $stmt->bind_param('i', $idCari);
-        $stmt->execute();
-        $tamu = $stmt->get_result()->fetch_assoc();
+        $tamu = jalankan($koneksi, 'SELECT id, nama FROM tb_tamu WHERE id = ?', 'i', [(int) $kodeTamu])->get_result()->fetch_assoc();
         if ($tamu) {
             $tamuId = (int) $tamu['id'];
             $namaTamu = $tamu['nama'];
@@ -29,8 +25,7 @@ if ($kodeTamu !== '' && ctype_digit($kodeTamu)) {
         }
     }
 } elseif ($kodeTamu !== '') {
-    $namaTamu = strip_tags($kodeTamu);
-    $namaTamu = potong_teks(trim(preg_replace('/[\p{C}\s]+/u', ' ', $namaTamu)), 60);
+    $namaTamu = bersihkan_nama_tamu($kodeTamu, 60);
     if ($namaTamu !== '') {
         $parameterTo = '?to=' . rawurlencode($namaTamu);
     }
@@ -39,19 +34,15 @@ $adaNamaTamu = $namaTamu !== '';
 $actionForm = 'index.php' . $parameterTo . '#formulir-ucapan';
 if (!$adaNamaTamu) $namaTamu = 'Tamu Undangan';
 $ucapanSaya = null;
+$pakaiSesi = !$adaNamaTamu;
 if ($koneksi && !$modePratinjau) {
+    $kolom = 'SELECT id, nama, rsvp, jumlah_tamu, pesan FROM tb_ucapan WHERE ';
     if ($tamuId !== null) {
-        $stmt = $koneksi->prepare('SELECT id, nama, rsvp, jumlah_tamu, pesan FROM tb_ucapan WHERE tamu_id = ? LIMIT 1');
-        $stmt->bind_param('i', $tamuId);
-        $stmt->execute();
-        $ucapanSaya = $stmt->get_result()->fetch_assoc() ?: null;
-    } elseif (!empty($_SESSION['ucapan_id_saya'])) {
-        $idSesi = (int) $_SESSION['ucapan_id_saya'];
-        $stmt = $koneksi->prepare('SELECT id, nama, rsvp, jumlah_tamu, pesan FROM tb_ucapan WHERE id = ? AND tamu_id IS NULL LIMIT 1');
-        $stmt->bind_param('i', $idSesi);
-        $stmt->execute();
-        $ucapanSaya = $stmt->get_result()->fetch_assoc() ?: null;
+        $stmt = jalankan($koneksi, $kolom . 'tamu_id = ? LIMIT 1', 'i', [$tamuId]);
+    } elseif ($pakaiSesi && !empty($_SESSION['ucapan_id_saya'])) {
+        $stmt = jalankan($koneksi, $kolom . 'id = ? AND tamu_id IS NULL LIMIT 1', 'i', [(int) $_SESSION['ucapan_id_saya']]);
     }
+    $ucapanSaya = isset($stmt) ? ($stmt->get_result()->fetch_assoc() ?: null) : null;
 }
 $pesanStatus = $_SESSION['flash'] ?? '';
 unset($_SESSION['flash']);
@@ -64,37 +55,36 @@ if (!$modePratinjau && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $jumlah = PILIHAN_JUMLAH[$labelJumlah] ?? 0;
     $galat  = null;
     $diperbarui = false;
-    if (trim(ambil_post_string('website')) === '') {
-        if (isset($_SESSION['ucapan_terakhir']) && time() - $_SESSION['ucapan_terakhir'] < 10) {
-            $galat = 'Mohon tunggu beberapa detik sebelum mengirim ucapan lagi.';
-        } elseif ($nama === '' || $pesan === '') {
-            $galat = 'Nama dan pesan wajib diisi.';
-        } elseif (strlen($nama) > 100 || strlen($pesan) > 1000) {
-            $galat = 'Nama maksimal 100 karakter dan pesan maksimal 1000 karakter.';
-        } elseif (!in_array($rsvp, PILIHAN_RSVP, true) || $jumlah === 0) {
-            $galat = 'Pilihan kehadiran tidak valid.';
-        } elseif (!$koneksi) {
-            $galat = 'Koneksi server bermasalah, silakan coba lagi nanti.';
-        } else {
-            if ($tamuId !== null) {
-                $diperbarui = $ucapanSaya !== null;
-                $stmt = $koneksi->prepare('INSERT INTO tb_ucapan (tamu_id, nama, rsvp, jumlah_tamu, pesan, created_at) VALUES (?, ?, ?, ?, ?, NOW())
-                                           ON DUPLICATE KEY UPDATE nama = VALUES(nama), rsvp = VALUES(rsvp), jumlah_tamu = VALUES(jumlah_tamu), pesan = VALUES(pesan), diubah_at = NOW()');
-                $stmt->bind_param('issis', $tamuId, $nama, $rsvp, $jumlah, $pesan);
-                $stmt->execute();
-            } elseif ($ucapanSaya !== null) {
-                $diperbarui = true;
-                $idUbah = (int) $ucapanSaya['id'];
-                $stmt = $koneksi->prepare('UPDATE tb_ucapan SET nama = ?, rsvp = ?, jumlah_tamu = ?, pesan = ?, diubah_at = NOW() WHERE id = ? AND tamu_id IS NULL');
-                $stmt->bind_param('ssisi', $nama, $rsvp, $jumlah, $pesan, $idUbah);
-                $stmt->execute();
+    if (ambil_post_string('kolom_jebakan') !== '') {
+        error_log('RSVP ditolak (honeypot terisi) dari ' . ($_SERVER['REMOTE_ADDR'] ?? '-'));
+    } elseif (isset($_SESSION['ucapan_terakhir']) && time() - $_SESSION['ucapan_terakhir'] < 10) {
+        $galat = 'Mohon tunggu beberapa detik sebelum mengirim ucapan lagi.';
+    } elseif ($nama === '' || $pesan === '') {
+        $galat = 'Nama dan pesan wajib diisi.';
+    } elseif (strlen($nama) > 100 || strlen($pesan) > 1000) {
+        $galat = 'Nama maksimal 100 karakter dan pesan maksimal 1000 karakter.';
+    } elseif (!in_array($rsvp, PILIHAN_RSVP, true) || $jumlah === 0) {
+        $galat = 'Pilihan kehadiran tidak valid.';
+    } elseif (!$koneksi) {
+        $galat = 'Koneksi server bermasalah, silakan coba lagi nanti.';
+    } else {
+        $diperbarui = $ucapanSaya !== null;
+        try {
+            if ($diperbarui) {
+                jalankan($koneksi, 'UPDATE tb_ucapan SET nama = ?, rsvp = ?, jumlah_tamu = ?, pesan = ?, diubah_at = NOW() WHERE id = ?',
+                    'ssisi', [$nama, $rsvp, $jumlah, $pesan, (int) $ucapanSaya['id']]);
             } else {
-                $stmt = $koneksi->prepare('INSERT INTO tb_ucapan (nama, rsvp, jumlah_tamu, pesan, created_at) VALUES (?, ?, ?, ?, NOW())');
-                $stmt->bind_param('ssis', $nama, $rsvp, $jumlah, $pesan);
-                $stmt->execute();
-                $_SESSION['ucapan_id_saya'] = $koneksi->insert_id;
+                jalankan($koneksi, 'INSERT INTO tb_ucapan (tamu_id, nama, rsvp, jumlah_tamu, pesan) VALUES (?, ?, ?, ?, ?)',
+                    'issis', [$tamuId, $nama, $rsvp, $jumlah, $pesan]);
+                if ($pakaiSesi) {
+                    $_SESSION['ucapan_id_saya'] = $koneksi->insert_id;
+                }
             }
             $_SESSION['ucapan_terakhir'] = time();
+            catat_log($koneksi, 'ucapan', $nama . ($diperbarui ? ' memperbarui konfirmasi: ' : ' mengonfirmasi: ') . $rsvp);
+        } catch (mysqli_sql_exception $e) {
+            error_log('Gagal menyimpan ucapan: ' . $e->getMessage());
+            $galat = 'Konfirmasi gagal disimpan. Muat ulang halaman lalu coba lagi.';
         }
     }
     if ($galat === null) {
@@ -136,11 +126,11 @@ $jsonFlag = JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#4E6151">
   <title>Undangan Pernikahan - <?= h($namaPasangan) ?></title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="assets/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
 <?php if ($konten['foto']['latar'] !== konten_default()['foto']['latar']): ?>
   <style>
     .latar-wallpaper {
@@ -366,7 +356,7 @@ $jsonFlag = JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS
         <h2 class="judul-bagian animasi-muncul">Konfirmasi &amp; Ucapan</h2>
         <p class="pengantar-ucapan subjudul-bagian animasi-muncul">Konfirmasi kehadiran Anda &amp; berikan ucapan hangat untuk kedua mempelai</p>
         <form id="formulir-ucapan" class="formulir-ucapan kaca animasi-muncul" action="<?= h($actionForm) ?>" method="post">
-          <input type="text" name="website" class="jebakan" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <input type="text" name="kolom_jebakan" class="jebakan" tabindex="-1" autocomplete="off" aria-hidden="true">
 <?php if ($ucapanSaya !== null): ?>
           <p class="catatan-edit"><i class="fa-solid fa-pen-to-square"></i> Anda sudah pernah mengirim konfirmasi. Ubah isian di bawah, lalu kirim untuk memperbarui.</p>
 <?php endif; ?>

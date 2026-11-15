@@ -35,9 +35,6 @@ function ambil_post_string($nama, $default = '') {
 function h($teks) {
     return htmlspecialchars((string) $teks, ENT_QUOTES, 'UTF-8');
 }
-function potong_teks($teks, $panjang = 60) {
-    return mb_substr($teks, 0, $panjang);
-}
 function label_jumlah($angka) {
     return (int) $angka >= 3 ? '3+ Orang' : (int) $angka . ' Orang';
 }
@@ -57,4 +54,33 @@ function cek_csrf($token) {
 }
 function sudah_login() {
     return !empty($_SESSION['admin_id']);
+}
+function jalankan(mysqli $db, string $sql, string $tipe = '', array $param = []): mysqli_stmt {
+    $stmt = $db->prepare($sql);
+    if ($param) {
+        $stmt->bind_param($tipe, ...$param);
+    }
+    $stmt->execute();
+    return $stmt;
+}
+function catat_log(?mysqli $db, string $jenis, string $teks): void {
+    if (!$db) {
+        return;
+    }
+    try {
+        jalankan($db, 'INSERT INTO tb_log (jenis, teks) VALUES (?, ?)', 'ss', [$jenis, mb_substr($teks, 0, 250)]);
+        $db->query('DELETE FROM tb_log WHERE id <= ' . ((int) $db->insert_id - 200));
+    } catch (mysqli_sql_exception $e) {
+        error_log('Gagal mencatat log: ' . $e->getMessage());
+    }
+}
+function bersihkan_nama_tamu($nilai, int $maks = 100): string {
+    $nilai = is_string($nilai) ? strip_tags($nilai) : '';
+    $nilai = preg_replace('/[\p{C}\s]+/u', ' ', $nilai) ?? '';
+    return mb_substr(trim($nilai), 0, $maks);
+}
+function url_undangan(): string {
+    global $https;
+    return ($https ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost')
+         . rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/') . '/index.php';
 }

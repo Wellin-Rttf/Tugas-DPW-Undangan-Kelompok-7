@@ -1,14 +1,6 @@
 <?php
-/**
- * Konten undangan yang dapat diedit lewat dashboard.
- *
- * - konten_default()  : isi undangan persis seperti sebelum fitur edit ada.
- * - muat_konten()     : default digabung dengan data tersimpan di tb_pengaturan.
- * - bersihkan_konten(): memvalidasi & merapikan kiriman formulir dashboard.
- */
-
 const DIR_UNGGAH      = 'assets/images/unggahan';
-const BATAS_UNGGAH    = 8 * 1024 * 1024; // 8 MB (setelah dikompres di browser biasanya < 1 MB)
+const BATAS_UNGGAH    = 8 * 1024 * 1024;
 const MAKS_GALERI     = 24;
 const MAKS_PERJALANAN = 12;
 const MAKS_REKENING   = 6;
@@ -96,13 +88,12 @@ function konten_default(): array
             'pengantar' => 'Doa restu Anda adalah hadiah terindah. Bagi yang ingin memberikan tanda kasih, dapat mengirimkannya melalui:',
             'rekening'  => [
                 ['bank' => 'Bank BCA',     'nomor' => '1234 5678 90', 'atas_nama' => 'Welling Simangunsong'],
-                ['bank' => 'Bank Mandiri', 'nomor' => '0987 6543 21', 'atas_nama' => 'Sheila Medina'],
+                ['bank' => 'Bank Mandiri', 'nomor' => '0987 6543 21', 'atas_nama' => 'Sheila Nurhaliza'],
             ],
         ],
     ];
 }
 
-/** Ikon yang boleh dipilih untuk perjalanan kami (kelas Font Awesome => label). */
 function daftar_ikon(): array
 {
     return [
@@ -120,10 +111,6 @@ function daftar_ikon(): array
         'fa-calendar-check'     => 'Kalender',
     ];
 }
-
-/* ------------------------------------------------------------------ */
-/* Muat & simpan                                                       */
-/* ------------------------------------------------------------------ */
 
 function konten_gabung(array $dasar, array $baru): array
 {
@@ -162,15 +149,8 @@ function muat_konten(?mysqli $db): array
 function simpan_konten(mysqli $db, array $konten): void
 {
     $json = json_encode($konten, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    $stmt = $db->prepare("INSERT INTO tb_pengaturan (kunci, nilai) VALUES ('konten', ?)
-                          ON DUPLICATE KEY UPDATE nilai = VALUES(nilai)");
-    $stmt->bind_param('s', $json);
-    $stmt->execute();
+    jalankan($db, "REPLACE INTO tb_pengaturan (kunci, nilai) VALUES ('konten', ?)", 's', [$json]);
 }
-
-/* ------------------------------------------------------------------ */
-/* Pembersihan input                                                   */
-/* ------------------------------------------------------------------ */
 
 function k_array($nilai): array
 {
@@ -182,7 +162,7 @@ function k_teks($nilai, int $maks, bool $banyakBaris = false): string
     if (!is_string($nilai)) {
         return '';
     }
-    $nilai = str_replace("\r\n", "\n", $nilai);
+    $nilai = str_replace(["\r\n", "\r"], "\n", $nilai);
     $nilai = preg_replace($banyakBaris ? '/[^\P{C}\n]+/u' : '/[\p{C}]+/u', ' ', $nilai) ?? '';
     $nilai = $banyakBaris ? preg_replace('/[ \t]+/u', ' ', $nilai) : preg_replace('/\s+/u', ' ', $nilai);
     return mb_substr(trim((string) $nilai), 0, $maks);
@@ -211,22 +191,16 @@ function k_tanggal($nilai): string
 {
     $nilai = is_string($nilai) ? trim($nilai) : '';
     $d = DateTime::createFromFormat('!Y-m-d', $nilai);
-    $galat = DateTime::getLastErrors();
-    $bersih = !$galat || ($galat['warning_count'] === 0 && $galat['error_count'] === 0);
-    return ($d && $bersih && $d->format('Y-m-d') === $nilai) ? $nilai : '';
+    return ($d && $d->format('Y-m-d') === $nilai) ? $nilai : '';
 }
 
 function path_foto_valid($path): bool
 {
     return is_string($path)
-        && preg_match('#^assets/images/(unggahan/)?[A-Za-z0-9_.-]+\.(jpe?g|png|webp|gif)$#i', $path) === 1
+        && preg_match('#^assets/images/(unggahan/)?[A-Za-z0-9_.-]+\.(jpe?g|png|webp)$#i', $path) === 1
         && strpos($path, '..') === false;
 }
 
-/**
- * Merapikan kiriman formulir (biasanya $_POST) menjadi struktur konten penuh.
- * Nilai yang tidak valid memakai nilai $lama, dan dicatat di $peringatan.
- */
 function bersihkan_konten(array $in, array $lama, ?array &$peringatan = null): array
 {
     $peringatan = [];
@@ -251,26 +225,24 @@ function bersihkan_konten(array $in, array $lama, ?array &$peringatan = null): a
         return $lamaNilai;
     };
 
-    // --- Mempelai ---
-    foreach (['pria' => 'pria', 'wanita' => 'wanita'] as $kunci => $etiket) {
+    foreach (['pria', 'wanita'] as $kunci) {
         $inp  = k_array(k_array($in['mempelai'] ?? null)[$kunci] ?? null);
         $lm   = $lama['mempelai'][$kunci];
 
         $baru['mempelai'][$kunci] = [
-            'panggilan' => $teksWajib($inp['panggilan'] ?? '', 40, $lm['panggilan'], "Nama panggilan mempelai $etiket"),
-            'nama'      => $teksWajib($inp['nama'] ?? '', 60, $lm['nama'], "Nama lengkap mempelai $etiket"),
+            'panggilan' => $teksWajib($inp['panggilan'] ?? '', 40, $lm['panggilan'], "Nama panggilan mempelai $kunci"),
+            'nama'      => $teksWajib($inp['nama'] ?? '', 60, $lm['nama'], "Nama lengkap mempelai $kunci"),
             'anak_dari' => k_teks($inp['anak_dari'] ?? '', 60),
             'orang_tua' => k_teks($inp['orang_tua'] ?? '', 120),
             'ig_nama'   => k_teks($inp['ig_nama'] ?? '', 60),
             'ig_link'   => k_url($inp['ig_link'] ?? ''),
-            'foto'      => $foto($inp['foto'] ?? '', $lm['foto'], "Foto mempelai $etiket"),
+            'foto'      => $foto($inp['foto'] ?? '', $lm['foto'], "Foto mempelai $kunci"),
         ];
         if (trim((string) ($inp['ig_link'] ?? '')) !== '' && $baru['mempelai'][$kunci]['ig_link'] === '') {
-            $peringatan[] = "Link Instagram mempelai $etiket harus diawali http:// atau https:// dan dikosongkan.";
+            $peringatan[] = "Link Instagram mempelai $kunci harus diawali http:// atau https:// dan dikosongkan.";
         }
     }
 
-    // --- Acara ---
     $inpAcara = k_array($in['acara'] ?? null);
     $tanggal  = k_tanggal($inpAcara['tanggal'] ?? '');
     if ($tanggal === '') {
@@ -309,7 +281,6 @@ function bersihkan_konten(array $in, array $lama, ?array &$peringatan = null): a
         }
     }
 
-    // --- Foto utama ---
     $inpFoto = k_array($in['foto'] ?? null);
     $baru['foto'] = [
         'latar'    => $foto($inpFoto['latar'] ?? '', $lama['foto']['latar'], 'Foto latar'),
@@ -317,7 +288,6 @@ function bersihkan_konten(array $in, array $lama, ?array &$peringatan = null): a
         'acara'    => $foto($inpFoto['acara'] ?? '', $lama['foto']['acara'], 'Foto banner acara'),
     ];
 
-    // --- Galeri ---
     $galeri = [];
     foreach (array_slice(array_values(k_array($in['galeri'] ?? null)), 0, MAKS_GALERI) as $path) {
         $path = is_string($path) ? trim($path) : '';
@@ -332,7 +302,6 @@ function bersihkan_konten(array $in, array $lama, ?array &$peringatan = null): a
     }
     $baru['galeri'] = $galeri;
 
-    // --- Perjalanan ---
     $ikonOk = daftar_ikon();
     $perjalanan = [];
     foreach (array_slice(array_values(k_array($in['perjalanan'] ?? null)), 0, MAKS_PERJALANAN) as $item) {
@@ -348,7 +317,6 @@ function bersihkan_konten(array $in, array $lama, ?array &$peringatan = null): a
     }
     $baru['perjalanan'] = $perjalanan;
 
-    // --- Hadiah digital ---
     $inpHadiah = k_array($in['hadiah'] ?? null);
     $rekening = [];
     foreach (array_slice(array_values(k_array($inpHadiah['rekening'] ?? null)), 0, MAKS_REKENING) as $r) {
@@ -374,10 +342,6 @@ function bersihkan_konten(array $in, array $lama, ?array &$peringatan = null): a
     return $baru;
 }
 
-/* ------------------------------------------------------------------ */
-/* Format tampilan                                                     */
-/* ------------------------------------------------------------------ */
-
 function tanggal_panjang(string $ymd): string
 {
     $hari  = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
@@ -399,7 +363,6 @@ function nama_pasangan(array $konten): string
     return $konten['mempelai']['pria']['panggilan'] . ' & ' . $konten['mempelai']['wanita']['panggilan'];
 }
 
-/** Data acara untuk JavaScript (hitung mundur & tombol kalender). */
 function data_acara_js(array $konten): array
 {
     $tgl = $konten['acara']['tanggal'];
@@ -420,11 +383,6 @@ function data_acara_js(array $konten): array
     return $hasil;
 }
 
-/* ------------------------------------------------------------------ */
-/* Foto                                                                */
-/* ------------------------------------------------------------------ */
-
-/** Menyimpan satu foto unggahan. Mengembalikan ['ok'=>bool, 'path'=>..., 'pesan'=>...]. */
 function proses_unggah_foto(?array $berkas): array
 {
     if (!$berkas || !isset($berkas['error']) || is_array($berkas['error'])) {
@@ -469,7 +427,6 @@ function proses_unggah_foto(?array $berkas): array
     return ['ok' => true, 'path' => DIR_UNGGAH . '/' . $nama];
 }
 
-/** Menghapus foto unggahan yang tidak lagi dipakai (dan sudah lebih dari 1 jam). */
 function bersihkan_foto_tak_terpakai(array $konten): void
 {
     $dipakai = [];

@@ -187,22 +187,30 @@ function simpanKeGoogleCalendar(jenis) {
   );
 }
 function jalankanCountdown() {
-  const tglAcara = new Date((window.KONTEN_ACARA && window.KONTEN_ACARA.mulai) || '2027-12-12T08:00:00+07:00').getTime();
-  const elHari = document.getElementById('cd-hari');
-  const elJam = document.getElementById('cd-jam');
-  const elMenit = document.getElementById('cd-menit');
-  const elDetik = document.getElementById('cd-detik');
-  const dua = (n) => (n < 10 ? '0' + n : n);
+  const kotak = document.getElementById('countdown');
+  const target = new Date((window.KONTEN_ACARA || {}).mulai).getTime();
+  if (!kotak) return;
+  if (Number.isNaN(target)) {
+    kotak.closest('.bagian').hidden = true;
+    return;
+  }
+  const unit = { hari: 86400000, jam: 3600000, menit: 60000, detik: 1000 };
+  const dua = (n) => String(n).padStart(2, '0');
+  let timer;
   function hitung() {
-    const selisih = tglAcara - Date.now();
-    if (selisih <= 0) return;
-    elHari.textContent = dua(Math.floor(selisih / 86400000));
-    elJam.textContent = dua(Math.floor((selisih % 86400000) / 3600000));
-    elMenit.textContent = dua(Math.floor((selisih % 3600000) / 60000));
-    elDetik.textContent = dua(Math.floor((selisih % 60000) / 1000));
+    let sisa = target - Date.now();
+    if (sisa <= 0) {
+      clearInterval(timer);
+      kotak.outerHTML = '<p class="countdown-selesai">Acara telah berlangsung. Terima kasih atas doa dan kehadiran Anda.</p>';
+      return;
+    }
+    for (const [nama, ms] of Object.entries(unit)) {
+      document.getElementById('cd-' + nama).textContent = dua(Math.floor(sisa / ms));
+      sisa %= ms;
+    }
   }
   hitung();
-  setInterval(hitung, 1000);
+  timer = setInterval(hitung, 1000);
 }
 function jalankanAnimasiMuncul() {
   const daftar = document.querySelectorAll('.animasi-muncul');
