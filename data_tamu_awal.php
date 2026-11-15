@@ -1,7 +1,7 @@
 <?php
 return [
     'Riaa',
-    'Pak Edi',
+    'Uli',
     'Deri',
     'Ilham',
     'Josua Simatupang',
